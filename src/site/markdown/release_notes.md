@@ -3,11 +3,11 @@
 All past CDK releases are documented on this page. Upcoming release dates can be found in
 [JIRA](https://issues.cloudera.org/browse/CDK#selectedTab=com.atlassian.jira.plugin.system.project%3Aversions-panel).
 
-## Version TBD
+## Version 0.8.1
 
-Release date: TBD
+Release date: October 23, 2013
 
-Version TBD has the following notable changes:
+Version 0.8.1 has the following notable changes:
 
 * Morphlines Library
     * Made xquery and xslt commands also compatible with woodstox-3.2.7 (not just woodstox-4.x).
