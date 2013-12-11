@@ -16,10 +16,17 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+  <parent>
+    <groupId>com.cloudera.cdh</groupId>
+    <artifactId>cdh-root</artifactId>
+    <version>5.0.0-SNAPSHOT</version>
+    <relativePath/>
+  </parent>
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.kitesdk</groupId>
   <artifactId>kite-parent</artifactId>
-  <version>0.10.0</version>
+  <version>0.10.0-cdh5.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
@@ -102,7 +109,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <!-- Java versions -->
-    <javaVersion>1.6</javaVersion>
+    <javaVersion>1.7</javaVersion>
     <targetJavaVersion>1.6</targetJavaVersion>
 
     <previous.project.version>0.9.0</previous.project.version> <!-- used by jdiff -->
@@ -110,19 +117,19 @@
     <cdh.version>4.3.0</cdh.version>
 
     <!-- Library versions -->
-    <vers.avro>1.7.5</vers.avro>
+    <vers.avro>${cdh.avro.version}</vers.avro>
     <vers.commons-codec>1.4</vers.commons-codec>
     <vers.commons-io>2.1</vers.commons-io>
     <vers.crunch-base>0.8.0</vers.crunch-base>
     <vers.crunch>${vers.crunch-base}-hadoop2</vers.crunch>
     <vers.findbugs.jsr305>2.0.1</vers.findbugs.jsr305>
-    <vers.flume>1.3.0-cdh${cdh.version}</vers.flume>
+    <vers.flume>${cdh.flume-ng.version}</vers.flume>
     <vers.guava>11.0.2</vers.guava>
-    <vers.hadoop>2.0.0-cdh${cdh.version}</vers.hadoop>
-    <vers.hadoop-mr1>2.0.0-mr1-cdh${cdh.version}</vers.hadoop-mr1>
-    <vers.hbase>0.94.6-cdh${cdh.version}</vers.hbase>
-    <vers.hcatalog>0.5.0-cdh${cdh.version}</vers.hcatalog>
-    <vers.hive>0.10.0-cdh${cdh.version}</vers.hive>
+    <vers.hadoop>${cdh.hadoop.version}</vers.hadoop>
+    <vers.hadoop-mr1>${cdh.mr1.version}</vers.hadoop-mr1>
+    <vers.hbase>${cdh.hbase.version}</vers.hbase>
+    <vers.hcatalog>${cdh.hive.version}</vers.hcatalog>
+    <vers.hive>${cdh.hive.version}</vers.hive>
     <vers.jetty>8.1.13.v20130916</vers.jetty>
     <vers.jexl>2.1.1</vers.jexl>
     <vers.compress>1.4.1</vers.compress>
@@ -130,16 +137,16 @@
     <vers.log4j>1.2.16</vers.log4j>
     <vers.maven>2.0.6</vers.maven>
     <vers.mojo-executor>1.5</vers.mojo-executor>
-    <vers.oozie>3.3.2-cdh${cdh.version}</vers.oozie>
+    <vers.oozie>${cdh.oozie.version}</vers.oozie>
     <vers.parquet>1.2.5</vers.parquet>
     <vers.plexus-utils>3.0</vers.plexus-utils>
     <vers.rat>0.9</vers.rat>
     <vers.slf4j>1.6.1</vers.slf4j>
     <vers.codahale.metrics>3.0.1</vers.codahale.metrics>
     <vers.typesafe.config>1.0.2</vers.typesafe.config>
-    <vers.solr>4.6.0</vers.solr>
-    <solr.expected.version>4.6.0</solr.expected.version> <!-- sanity check to verify we actually run against the expected version rather than some outdated version -->
-    <vers.tika>1.4</vers.tika>
+    <vers.solr>${cdh.solr.version}</vers.solr>
+    <solr.expected.version>4.6.0-cdh</solr.expected.version> <!-- sanity check to verify we actually run against the expected version rather than some outdated version -->
+    <vers.tika>${cdh.tika.version}</vers.tika>
     <vers.jackson>2.2.1</vers.jackson>
     <vers.opencsv>2.3</vers.opencsv>
 
@@ -169,14 +176,23 @@
 
   <repositories>
     <repository>
-      <id>com.cloudera.releases</id>
-      <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
+      <id>cdh.repo</id>
+      <url>https://repository.cloudera.com/artifactory/cloudera-repos</url>
+      <name>Cloudera Repositories</name>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>cdh.snapshots.repo</id>
+      <url>https://repository.cloudera.com/artifactory/libs-snapshot-local</url>
+      <name>Cloudera Snapshots Repository</name>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
     </repository>
     <repository>
       <id>maven-twttr</id>
@@ -938,21 +954,5 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
-  <distributionManagement>
-    <repository>
-      <id>cloudera.repo</id>
-      <url>https://repository.cloudera.com/artifactory/libs-release-local</url>
-    </repository>
-    <snapshotRepository>
-      <id>cloudera.snapshots.repo</id>
-      <url>http://maven.jenkins.cloudera.com:8081/artifactory/cdh-snapshot-local</url>
-    </snapshotRepository>
-    <site>
-      <id>kitesdk.website</id>
-      <name>Kite SDK documentation</name>
-      <url>docs/${project.version}</url>
-    </site>
-  </distributionManagement>
 
 </project>
