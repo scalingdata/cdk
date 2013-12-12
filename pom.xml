@@ -134,7 +134,7 @@
     <vers.jexl>2.1.1</vers.jexl>
     <vers.compress>1.4.1</vers.compress>
     <vers.junit>4.10</vers.junit>
-    <vers.log4j>1.2.16</vers.log4j>
+    <vers.log4j>1.2.17</vers.log4j>
     <vers.maven>2.0.6</vers.maven>
     <vers.mojo-executor>1.5</vers.mojo-executor>
     <vers.oozie>${cdh.oozie.version}</vers.oozie>
