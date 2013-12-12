@@ -141,7 +141,7 @@
     <vers.parquet>1.2.5</vers.parquet>
     <vers.plexus-utils>3.0</vers.plexus-utils>
     <vers.rat>0.9</vers.rat>
-    <vers.slf4j>1.6.1</vers.slf4j>
+    <vers.slf4j>${cdh.slf4j.version}</vers.slf4j>
     <vers.codahale.metrics>3.0.1</vers.codahale.metrics>
     <vers.typesafe.config>1.0.2</vers.typesafe.config>
     <vers.solr>${cdh.solr.version}</vers.solr>
