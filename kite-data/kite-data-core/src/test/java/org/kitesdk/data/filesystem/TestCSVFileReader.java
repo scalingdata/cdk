@@ -22,7 +22,6 @@ import org.kitesdk.data.TestDatasetReaders;
 import org.kitesdk.data.TestHelpers;
 import org.apache.avro.AvroRuntimeException;
 import org.apache.avro.Schema;
-import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -62,36 +61,13 @@ public class TestCSVFileReader extends TestDatasetReaders<GenericData.Record> {
   public static Path validatorFile = null;
   public static Path tsvFile = null;
 
-  public static Schema STRINGS = SchemaBuilder.record("Strings")
-      .fields()
-      .name("string1").type().stringType().noDefault()
-      .name("string2").type().stringType().noDefault()
-      .name("string3").type().stringType().noDefault()
-      .name("string4").type().stringType().stringDefault("missing value")
-      .endRecord();
+  public static Schema STRINGS = new Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Strings\",\"fields\":[{\"name\":\"string1\",\"type\":\"string\"},{\"name\":\"string2\",\"type\":\"string\"},{\"name\":\"string3\",\"type\":\"string\"},{\"name\":\"string4\",\"type\":\"string\",\"default\":\"missing value\"}]}");
 
-  public static final Schema VALIDATOR_SCHEMA = SchemaBuilder.record("Validator")
-      .fields()
-      .name("id").type().intType().noDefault()
-      .name("string").type().stringType().noDefault()
-      .name("even").type().booleanType().booleanDefault(false)
-      .endRecord();
+  public static final Schema VALIDATOR_SCHEMA = new Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Validator\",\"fields\":[{\"name\":\"id\",\"type\":\"int\"},{\"name\":\"string\",\"type\":\"string\"},{\"name\":\"even\",\"type\":\"boolean\",\"default\":false}]}");
 
-  public static Schema BEAN_SCHEMA = SchemaBuilder.record(TestBean.class.getName())
-      .fields()
-      .name("myString").type().stringType().noDefault()
-      .name("myInt").type().intType().intDefault(0)
-      .name("myFloat").type().floatType().noDefault()
-      .name("myBool").type().booleanType().booleanDefault(false)
-      .endRecord();
+  public static Schema BEAN_SCHEMA = new Schema.Parser().parse("{\"type\":\"record\",\"name\":\"TestBean\",\"namespace\":\"org.kitesdk.data.filesystem\",\"fields\":[{\"name\":\"myString\",\"type\":\"string\"},{\"name\":\"myInt\",\"type\":\"int\",\"default\":0},{\"name\":\"myFloat\",\"type\":\"float\"},{\"name\":\"myBool\",\"type\":\"boolean\",\"default\":false}]}");
 
-  public static Schema SCHEMA = SchemaBuilder.record("Normal")
-      .fields()
-      .name("myString").type().stringType().noDefault()
-      .name("myInt").type().intType().intDefault(0)
-      .name("myFloat").type().floatType().noDefault()
-      .name("myBool").type().booleanType().booleanDefault(false)
-      .endRecord();
+  public static Schema SCHEMA = new Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Normal\",\"fields\":[{\"name\":\"myString\",\"type\":\"string\"},{\"name\":\"myInt\",\"type\":\"int\",\"default\":0},{\"name\":\"myFloat\",\"type\":\"float\"},{\"name\":\"myBool\",\"type\":\"boolean\",\"default\":false}]}");
 
   @BeforeClass
   public static void createCSVFiles() throws IOException {
@@ -143,7 +119,7 @@ public class TestCSVFileReader extends TestDatasetReaders<GenericData.Record> {
   @Test(expected = IllegalArgumentException.class)
   public void testRejectsNonRecordSchemas() {
     final DatasetDescriptor desc = new DatasetDescriptor.Builder()
-        .schema(SchemaBuilder.array().items().stringType())
+        .schema(new Schema.Parser().parse("{\"type\":\"array\",\"items\":\"string\"}"))
         .build();
     new CSVFileReader(localfs, csvFile, desc);
   }

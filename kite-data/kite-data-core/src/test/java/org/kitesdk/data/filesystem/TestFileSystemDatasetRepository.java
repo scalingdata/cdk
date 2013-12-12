@@ -26,7 +26,6 @@ import org.kitesdk.data.PartitionStrategy;
 import java.io.IOException;
 import java.net.URI;
 import org.apache.avro.Schema;
-import org.apache.avro.SchemaBuilder;
 import org.apache.hadoop.fs.Path;
 import org.junit.Assert;
 import org.junit.Test;
@@ -161,11 +160,7 @@ public class TestFileSystemDatasetRepository extends TestDatasetRepositories {
     Assert.assertEquals("Dataset schema is propagated", testSchema, dataset
         .getDescriptor().getSchema());
 
-    Schema testSchemaV2 = SchemaBuilder.record("user").fields()
-        .requiredString("username")
-        .requiredString("email")
-        .requiredString("favoriteColor") // incompatible - no default
-        .endRecord();
+    Schema testSchemaV2 = new Schema.Parser().parse("{\"type\":\"record\",\"name\":\"user\",\"fields\":[{\"name\":\"username\",\"type\":\"string\"},{\"name\":\"email\",\"type\":\"string\"},{\"name\":\"favoriteColor\",\"type\":\"string\"}]}");
 
     try {
       repo.update(NAME, new DatasetDescriptor.Builder().schema(testSchemaV2).build());
@@ -186,11 +181,7 @@ public class TestFileSystemDatasetRepository extends TestDatasetRepositories {
     writeTestUsers(dataset, 5, 0, "email");
     checkTestUsers(dataset, 5, "email");
 
-    Schema testSchemaV2 = SchemaBuilder.record("user").fields()
-        .requiredString("username")
-        .requiredString("email")
-        .nullableString("favoriteColor", "orange")
-        .endRecord();
+    Schema testSchemaV2 = new Schema.Parser().parse("{\"type\":\"record\",\"name\":\"user\",\"fields\":[{\"name\":\"username\",\"type\":\"string\"},{\"name\":\"email\",\"type\":\"string\"},{\"name\":\"favoriteColor\",\"type\":[\"string\",\"null\"],\"default\":\"orange\"}]}");
 
     Dataset<Record> datasetV2 = repo.update(NAME,
         new DatasetDescriptor.Builder(dataset.getDescriptor())
@@ -216,9 +207,7 @@ public class TestFileSystemDatasetRepository extends TestDatasetRepositories {
     writeTestUsers(dataset, 5, 0, "email");
     checkTestUsers(dataset, 5, "email");
 
-    Schema testSchemaV2 = SchemaBuilder.record("user").fields()
-        .requiredString("username")
-        .endRecord();
+    Schema testSchemaV2 = new Schema.Parser().parse("{\"type\":\"record\",\"name\":\"user\",\"fields\":[{\"name\":\"username\",\"type\":\"string\"}]}");
 
     Dataset<Record> datasetV2 = repo.update(NAME,
         new DatasetDescriptor.Builder(dataset.getDescriptor())
