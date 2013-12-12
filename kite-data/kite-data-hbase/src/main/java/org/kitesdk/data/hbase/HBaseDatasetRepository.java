@@ -15,6 +15,7 @@
  */
 package org.kitesdk.data.hbase;
 
+import java.io.IOException;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.DatasetRepositoryException;
 import org.kitesdk.data.RandomAccessDataset;
@@ -151,6 +152,9 @@ public class HBaseDatasetRepository extends AbstractDatasetRepository implements
         throw new DatasetRepositoryException(
             "Problem creating HBaseDatasetRepository.", e);
       } catch (ZooKeeperConnectionException e) {
+        throw new DatasetRepositoryException(
+            "Problem creating HBaseDatasetRepository.", e);
+      } catch (IOException e) {
         throw new DatasetRepositoryException(
             "Problem creating HBaseDatasetRepository.", e);
       }

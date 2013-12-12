@@ -27,7 +27,8 @@
     <module>kite-data-crunch</module>
     <module>kite-data-flume</module>
     <module>kite-data-hcatalog</module>
-    <module>kite-data-hbase</module>
+    <!-- temporarily disabled for CDH5
+    <module>kite-data-hbase</module> -->
   </modules>
 
   <parent>

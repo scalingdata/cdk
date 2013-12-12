@@ -756,7 +756,7 @@
       </dependency>
       <dependency>
         <groupId>org.apache.hbase</groupId>
-        <artifactId>hbase</artifactId>
+        <artifactId>hbase-client</artifactId>
         <version>${vers.hbase}</version>
         <scope>provided</scope>
         <exclusions>
@@ -768,11 +768,31 @@
       </dependency>
       <dependency>
         <groupId>org.apache.hbase</groupId>
-        <artifactId>hbase</artifactId>
+        <artifactId>hbase-client</artifactId>
         <version>${vers.hbase}</version>
         <classifier>tests</classifier>
         <scope>provided</scope>
       </dependency>      
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-server</artifactId>
+        <version>${vers.hbase}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-server</artifactId>
+        <version>${vers.hbase}</version>
+        <classifier>tests</classifier>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-common</artifactId>
+        <version>${vers.hbase}</version>
+        <classifier>tests</classifier>
+        <scope>test</scope>
+      </dependency>
       <dependency>
         <groupId>org.apache.hive.hcatalog</groupId>
         <artifactId>hive-hcatalog-core</artifactId>

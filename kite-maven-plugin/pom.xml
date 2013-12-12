@@ -76,11 +76,12 @@
       <artifactId>kite-data-core</artifactId>
       <version>0.10.0-cdh5.0.0-SNAPSHOT</version>
     </dependency>
+    <!-- temporarily removed for CDH5
     <dependency>
       <groupId>org.kitesdk</groupId>
       <artifactId>kite-data-hbase</artifactId>
       <version>0.10.0-cdh5.0.0-SNAPSHOT</version>
-    </dependency>
+    </dependency> -->
     <dependency>
       <groupId>org.kitesdk</groupId>
       <artifactId>kite-data-hcatalog</artifactId>
@@ -142,7 +143,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.hbase</groupId>
-      <artifactId>hbase</artifactId>
+      <artifactId>hbase-client</artifactId>
       <scope>runtime</scope> <!-- plugin acts as a Hadoop container -->
     </dependency>
     <dependency>

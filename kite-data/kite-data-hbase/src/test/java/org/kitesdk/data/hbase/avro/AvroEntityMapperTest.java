@@ -29,6 +29,7 @@ import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.util.Utf8;
+import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
@@ -174,12 +175,12 @@ public class AvroEntityMapperTest {
     
     Put put = entityMapper.mapFromEntity(record).getPut();
 
-    List<KeyValue> field1 = put.get(stringToBytes("int"), stringToBytes("1"));
+    List<Cell> field1 = put.get(stringToBytes("int"), stringToBytes("1"));
     assertEquals(1, field1.size());
     assertArrayEquals(new byte[] { (byte) 0, (byte) 0, (byte) 0, (byte) 1 },
         field1.get(0).getValue());
 
-    List<KeyValue> field2 = put.get(stringToBytes("int"), stringToBytes("2"));
+    List<Cell> field2 = put.get(stringToBytes("int"), stringToBytes("2"));
     assertEquals(1, field2.size());
     assertArrayEquals(new byte[] { (byte) 0, (byte) 0, (byte) 0, (byte) 2 },
         field2.get(0).getValue());
