@@ -145,7 +145,7 @@
     <vers.codahale.metrics>3.0.1</vers.codahale.metrics>
     <vers.typesafe.config>1.0.2</vers.typesafe.config>
     <vers.solr>${cdh.solr.version}</vers.solr>
-    <solr.expected.version>4.6.0-cdh</solr.expected.version> <!-- sanity check to verify we actually run against the expected version rather than some outdated version -->
+    <solr.expected.version>${cdh.solr.version}</solr.expected.version> <!-- sanity check to verify we actually run against the expected version rather than some outdated version -->
     <vers.tika>${cdh.tika.version}</vers.tika>
     <vers.jackson>2.2.1</vers.jackson>
     <vers.opencsv>2.3</vers.opencsv>
