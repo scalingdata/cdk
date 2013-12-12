@@ -19,7 +19,6 @@ package org.kitesdk.data.hcatalog;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.apache.avro.Schema;
-import org.apache.avro.SchemaBuilder;
 import org.apache.hadoop.hive.metastore.api.FieldSchema;
 import org.apache.hadoop.hive.serde2.typeinfo.StructTypeInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
@@ -32,17 +31,8 @@ import java.util.List;
 
 public class TestSchemaConversion {
 
-  private static final Schema SIMPLE_RECORD =
-      SchemaBuilder.record("SimpleRecord").fields()
-          .name("id").type().intType().noDefault()
-          .name("name").type().stringType().noDefault()
-          .endRecord();
-  private static final Schema COMPLEX_RECORD =
-      SchemaBuilder.record("ComplexRecord").fields()
-          .name("groupName").type().stringType().noDefault()
-          .name("simpleRecords").type().array().items()
-              .type(SIMPLE_RECORD).noDefault()
-          .endRecord();
+  private static final Schema SIMPLE_RECORD = new Schema.Parser().parse("{\"type\":\"record\",\"name\":\"SimpleRecord\",\"fields\":[{\"name\":\"id\",\"type\":\"int\"},{\"name\":\"name\",\"type\":\"string\"}]}");
+  private static final Schema COMPLEX_RECORD = new Schema.Parser().parse("{\"type\":\"record\",\"name\":\"ComplexRecord\",\"fields\":[{\"name\":\"groupName\",\"type\":\"string\"},{\"name\":\"simpleRecords\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"SimpleRecord\",\"fields\":[{\"name\":\"id\",\"type\":\"int\"},{\"name\":\"name\",\"type\":\"string\"}]}}}]}");
 
   private static final Function<FieldSchema, String> GET_NAMES =
       new Function<FieldSchema, String>() {
@@ -69,7 +59,7 @@ public class TestSchemaConversion {
 
   @Test
   public void testConvertSchemaWithPrimitive() {
-    Schema primitiveSchema = SchemaBuilder.builder().stringType();
+    Schema primitiveSchema = new Schema.Parser().parse("\"string\"");
     List<FieldSchema> fields = HiveUtils.convertSchema(primitiveSchema);
 
     Assert.assertEquals("Should be a single FieldSchema", 1, fields.size());
@@ -95,6 +85,7 @@ public class TestSchemaConversion {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testConvertSchemaWithComplexRecord() {
     // convertSchema returns a list of FieldSchema objects rather than TypeInfo
     List<FieldSchema> fields = HiveUtils.convertSchema(COMPLEX_RECORD);
@@ -108,7 +99,7 @@ public class TestSchemaConversion {
             TypeInfoFactory.getListTypeInfo(
                 TypeInfoFactory.getStructTypeInfo(
                     Lists.newArrayList("id", "name"),
-                    Lists.newArrayList(
+                    (List) Lists.newArrayList(
                         TypeInfoFactory.intTypeInfo,
                         TypeInfoFactory.stringTypeInfo))).toString()),
         Lists.transform(fields, GET_TYPE_STRINGS));
@@ -132,8 +123,7 @@ public class TestSchemaConversion {
 
   @Test
   public void testArray() {
-    TypeInfo type = HiveUtils.convert(SchemaBuilder.array()
-        .items().floatType());
+    TypeInfo type = HiveUtils.convert(new Schema.Parser().parse("{\"type\":\"array\",\"items\":\"float\"}"));
 
     Assert.assertEquals("Array should be converted to list",
         TypeInfoFactory.getListTypeInfo(TypeInfoFactory.floatTypeInfo),
@@ -142,8 +132,7 @@ public class TestSchemaConversion {
 
   @Test
   public void testMap() {
-    TypeInfo type = HiveUtils.convert(SchemaBuilder.builder().map()
-        .values().booleanType());
+    TypeInfo type = HiveUtils.convert(new Schema.Parser().parse("{\"type\":\"map\",\"values\":\"boolean\"}"));
 
     Assert.assertEquals("Map should be converted to map",
         TypeInfoFactory.getMapTypeInfo(
@@ -152,16 +141,12 @@ public class TestSchemaConversion {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testUnion() {
-    TypeInfo type = HiveUtils.convert(SchemaBuilder.builder().unionOf()
-        .bytesType().and()
-        .fixed("fixed").size(12).and()
-        .doubleType().and()
-        .longType()
-        .endUnion());
+    TypeInfo type = HiveUtils.convert(new Schema.Parser().parse("[\"bytes\",{\"type\":\"fixed\",\"name\":\"fixed\",\"size\":12},\"double\",\"long\"]"));
 
     Assert.assertEquals("Union should be converted to union",
-        TypeInfoFactory.getUnionTypeInfo(Lists.newArrayList(
+        TypeInfoFactory.getUnionTypeInfo((List) Lists.newArrayList(
             TypeInfoFactory.binaryTypeInfo,
             TypeInfoFactory.binaryTypeInfo,
             TypeInfoFactory.doubleTypeInfo,
@@ -171,8 +156,7 @@ public class TestSchemaConversion {
 
   @Test
   public void testEnum() {
-    TypeInfo type = HiveUtils.convert(SchemaBuilder.builder()
-        .enumeration("TestEnum").symbols("a", "b", "c"));
+    TypeInfo type = HiveUtils.convert(new Schema.Parser().parse("{\"type\":\"enum\",\"name\":\"TestEnum\",\"symbols\":[\"a\",\"b\",\"c\"]}"));
 
     Assert.assertEquals("Enum should be converted to string",
         TypeInfoFactory.stringTypeInfo, type);
@@ -181,11 +165,7 @@ public class TestSchemaConversion {
   // TODO: this should throw an IllegalArgumentException instead
   @Test(expected=StackOverflowError.class)
   public void testRecursiveRecord() {
-    Schema recursiveRecord = SchemaBuilder.record("RecursiveRecord").fields()
-        .name("name").type().stringType().noDefault()
-        .name("children").type().array().items()
-            .type("RecursiveRecord").noDefault()
-        .endRecord();
+    Schema recursiveRecord = new Schema.Parser().parse("{\"type\":\"record\",\"name\":\"RecursiveRecord\",\"fields\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"children\",\"type\":{\"type\":\"array\",\"items\":\"RecursiveRecord\"}}]}");
     HiveUtils.convert(recursiveRecord);
   }
 }
