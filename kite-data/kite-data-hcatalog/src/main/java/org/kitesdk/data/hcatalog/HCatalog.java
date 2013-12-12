@@ -22,7 +22,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.metastore.HiveMetaStoreClient;
 import org.apache.hadoop.hive.ql.metadata.Table;
-import org.apache.hcatalog.common.HCatUtil;
+import org.apache.hive.hcatalog.common.HCatUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

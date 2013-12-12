@@ -146,9 +146,9 @@
       <scope>runtime</scope> <!-- plugin acts as a Hadoop container -->
     </dependency>
     <dependency>
-      <groupId>org.apache.hcatalog</groupId>
-      <artifactId>hcatalog-core</artifactId>
-      <version>0.5.0-cdh4.3.0</version>
+      <groupId>org.apache.hive.hcatalog</groupId>
+      <artifactId>hive-hcatalog-core</artifactId>
+      <version>${vers.hcatalog}</version>
       <scope>runtime</scope> <!-- plugin acts as a Hadoop container -->
       <exclusions> <!-- MR and YARN are not needed -->
         <exclusion>

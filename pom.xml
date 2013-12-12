@@ -774,8 +774,8 @@
         <scope>provided</scope>
       </dependency>      
       <dependency>
-        <groupId>org.apache.hcatalog</groupId>
-        <artifactId>hcatalog-core</artifactId>
+        <groupId>org.apache.hive.hcatalog</groupId>
+        <artifactId>hive-hcatalog-core</artifactId>
         <version>${vers.hcatalog}</version>
         <scope>provided</scope>
       </dependency>

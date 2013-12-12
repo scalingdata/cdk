@@ -122,8 +122,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.hcatalog</groupId>
-      <artifactId>hcatalog-core</artifactId>
+      <groupId>org.apache.hive.hcatalog</groupId>
+      <artifactId>hive-hcatalog-core</artifactId>
       <scope>provided</scope>
     </dependency>
 
