@@ -794,6 +794,32 @@
         <scope>test</scope>
       </dependency>
       <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-hadoop-compat</artifactId>
+        <version>${vers.hbase}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-hadoop-compat</artifactId>
+        <version>${vers.hbase}</version>
+        <classifier>tests</classifier>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-hadoop2-compat</artifactId>
+        <version>${vers.hbase}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-hadoop2-compat</artifactId>
+        <version>${vers.hbase}</version>
+        <classifier>tests</classifier>
+        <scope>test</scope>      
+      </dependency>    
+      <dependency>
         <groupId>org.apache.hive.hcatalog</groupId>
         <artifactId>hive-hcatalog-core</artifactId>
         <version>${vers.hcatalog}</version>
