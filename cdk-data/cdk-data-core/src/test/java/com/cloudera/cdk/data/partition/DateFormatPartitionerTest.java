@@ -19,6 +19,8 @@ package com.cloudera.cdk.data.partition;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.cloudera.cdk.data.PartitionStrategy;
+import com.cloudera.cdk.data.impl.Accessor;
 import java.util.TimeZone;
 
 public class DateFormatPartitionerTest {
@@ -34,5 +36,15 @@ public class DateFormatPartitionerTest {
         "sourceField", "day", "yyyy-MM-dd", 1095, TimeZone.getTimeZone("PDT"));
     // same result because timestamps are _always_ UTC
     Assert.assertEquals("2013-11-20", yyyyMMdd_PDT.apply(time));
+  }
+
+  @Test
+  public void testExpressionRoundTrip() {
+    PartitionStrategy strategy = new PartitionStrategy.Builder()
+        .dateFormat("timestamp", "day", "yyyy-MM-dd")
+        .build();
+    PartitionStrategy copy = Accessor.getDefault().fromExpression(
+        Accessor.getDefault().toExpression(strategy));
+    Assert.assertEquals(strategy, copy);
   }
 }
