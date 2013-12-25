@@ -30,7 +30,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import org.kitesdk.morphline.api.Collector;
 import org.kitesdk.morphline.api.Command;
 import org.kitesdk.morphline.api.MorphlineContext;
@@ -39,6 +38,7 @@ import org.kitesdk.morphline.base.Compiler;
 import org.kitesdk.morphline.base.FaultTolerance;
 import org.kitesdk.morphline.base.Notifications;
 import org.kitesdk.morphline.stdlib.PipeBuilder;
+
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ListMultimap;
 import com.typesafe.config.Config;
