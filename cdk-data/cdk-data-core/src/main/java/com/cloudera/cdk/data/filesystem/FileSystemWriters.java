@@ -23,6 +23,7 @@ import com.cloudera.cdk.data.Format;
 import com.cloudera.cdk.data.Formats;
 import com.cloudera.cdk.data.UnknownFormatException;
 import com.google.common.base.Joiner;
+import java.util.UUID;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
@@ -56,13 +57,8 @@ abstract class FileSystemWriters {
     }
   }
 
-  private static Joiner DASH = Joiner.on('-');
-
   private static String uniqueFilename(Format format) {
-    // FIXME: This file name is not guaranteed to be truly unique.
-    return DASH.join(
-        System.currentTimeMillis(),
-        Thread.currentThread().getId() + "." + format.getExtension());
+    return UUID.randomUUID() + "." + format.getExtension();
   }
 
 }
