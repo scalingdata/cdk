@@ -63,6 +63,7 @@ public final class ReadCSVBuilder implements CommandBuilder {
     private final Charset charset;
     private final boolean ignoreFirstLine;
     private final boolean trim;
+    private final boolean addEmptyStrings;
     private final String commentPrefix;
     private final String quoteChar;
     private final boolean ignoreEmptyLines = true;
@@ -79,6 +80,7 @@ public final class ReadCSVBuilder implements CommandBuilder {
       this.charset = getConfigs().getCharset(config, "charset", null);
       this.ignoreFirstLine = getConfigs().getBoolean(config, "ignoreFirstLine", false);
       this.trim = getConfigs().getBoolean(config, "trim", true);      
+      this.addEmptyStrings = getConfigs().getBoolean(config, "addEmptyStrings", true);
       this.quoteChar = getConfigs().getString(config, "quoteChar", "");
       if (quoteChar.length() > 1) {
         throw new MorphlineCompilationException(
@@ -94,8 +96,8 @@ public final class ReadCSVBuilder implements CommandBuilder {
             "Comment prefix must not have a length of more than one character: " + commentPrefix, config);
       }
       this.tokenizer = quoteChar.length() == 0 ? 
-          new SimpleCSVTokenizer(separatorChar, trim, columnNames) : 
-          new QuotedCSVTokenizer(separatorChar, trim, columnNames, quoteChar.charAt(0));          
+          new SimpleCSVTokenizer(separatorChar, trim, addEmptyStrings, columnNames) : 
+          new QuotedCSVTokenizer(separatorChar, trim, addEmptyStrings, columnNames, quoteChar.charAt(0));          
       validateArguments();
     }
   
