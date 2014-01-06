@@ -120,6 +120,7 @@
     <vers.avro>${cdh.avro.version}</vers.avro>
     <vers.commons-codec>1.4</vers.commons-codec>
     <vers.commons-io>2.1</vers.commons-io>
+    <vers.crunch-base>0.9.0</vers.crunch-base>
     <vers.crunch>${cdh.crunch.version}</vers.crunch>
     <vers.findbugs.jsr305>2.0.1</vers.findbugs.jsr305>
     <vers.flume>${cdh.flume-ng.version}</vers.flume>
