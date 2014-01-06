@@ -22,8 +22,11 @@ import com.cloudera.cdk.data.DatasetWriterException;
 import com.cloudera.cdk.data.Format;
 import com.cloudera.cdk.data.Formats;
 import com.cloudera.cdk.data.UnknownFormatException;
+import com.cloudera.cdk.data.spi.PartitionListener;
+import com.cloudera.cdk.data.spi.StorageKey;
 import com.google.common.base.Joiner;
 import java.util.UUID;
+import javax.annotation.Nullable;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
@@ -33,10 +36,15 @@ abstract class FileSystemWriters {
 
   @SuppressWarnings("unchecked") // See https://github.com/Parquet/parquet-mr/issues/106
   public static <E> DatasetWriter<E> newFileWriter(
-      FileSystem fs, Path path, DatasetDescriptor descriptor) {
+      FileSystem fs, Path path, DatasetDescriptor descriptor,
+      @Nullable PartitionListener partitionListener, @Nullable String name,
+      @Nullable StorageKey key) {
     // ensure the path exists
     try {
       fs.mkdirs(path);
+      if (partitionListener != null) {
+        partitionListener.partitionAdded(name, key);
+      }
     } catch (IOException ex) {
       throw new DatasetWriterException("Could not create path:" + path, ex);
     }
