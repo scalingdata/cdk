@@ -17,12 +17,11 @@
 package com.cloudera.cdk.data.hcatalog;
 
 import com.cloudera.cdk.data.DatasetDescriptor;
-import com.cloudera.cdk.data.FieldPartitioner;
-import com.cloudera.cdk.data.filesystem.impl.Accessor;
 import com.cloudera.cdk.data.spi.AbstractMetadataProvider;
 import com.cloudera.cdk.data.spi.PartitionListener;
-import com.cloudera.cdk.data.spi.StorageKey;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.List;
@@ -36,6 +35,8 @@ abstract class HCatalogMetadataProvider extends AbstractMetadataProvider impleme
 
   private static final Logger logger = LoggerFactory
       .getLogger(HCatalogMetadataProvider.class);
+  private static final Splitter PATH_SPLITTER = Splitter.on('/');
+
   protected final Configuration conf;
   final HCatalog hcat;
 
@@ -88,12 +89,8 @@ abstract class HCatalogMetadataProvider extends AbstractMetadataProvider impleme
 
   @Override
   @SuppressWarnings("unchecked")
-  public void partitionAdded(String name, StorageKey key) {
-    List<String> partitionValues = Lists.newArrayList();
-    for (FieldPartitioner fp : key.getPartitionStrategy().getFieldPartitioners()) {
-      partitionValues.add(Accessor.getDefault().dirnameForValue(fp,
-          key.get(fp.getName())));
-    }
-    hcat.addPartition(HiveUtils.DEFAULT_DB, name, partitionValues);
+  public void partitionAdded(String name, String key) {
+    hcat.addPartition(HiveUtils.DEFAULT_DB, name,
+        Lists.newArrayList(PATH_SPLITTER.split(key)));
   }
 }

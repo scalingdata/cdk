@@ -20,5 +20,5 @@ package com.cloudera.cdk.data.spi;
  * so they can act on it (e.g. by registering the new partition in their metadata store).
  */
 public interface PartitionListener {
-  void partitionAdded(String name, StorageKey key);
+  void partitionAdded(String name, String partition);
 }
