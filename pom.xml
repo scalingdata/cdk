@@ -130,7 +130,7 @@
     <vers.hbase>${cdh.hbase.version}</vers.hbase>
     <vers.hcatalog>${cdh.hive.version}</vers.hcatalog>
     <vers.hive>${cdh.hive.version}</vers.hive>
-    <vers.jetty>jetty-8.1.14.v20131031</vers.jetty>
+    <vers.jetty>8.1.14.v20131031</vers.jetty>
     <vers.jexl>2.1.1</vers.jexl>
     <vers.compress>1.4.1</vers.compress>
     <vers.junit>4.10</vers.junit>
