@@ -34,4 +34,5 @@ OK: com.cloudera.cdk.data.FieldPartitioner Method getSourceType()
 OK: com.cloudera.cdk.data.DatasetRepositories Method openRandomAccess(java.lang.String)
 OK: com.cloudera.cdk.data.DatasetRepositories Method openRandomAccess(java.net.URI)
 NO DOC BLOCK: com.cloudera.cdk.data.flume.Log4jAppender Method requiresLayout()
+NO DOC BLOCK: com.cloudera.cdk.data.partition.PartitionFunctions Method toExpression(com.cloudera.cdk.data.FieldPartitioner)
 OK: com.cloudera.cdk.data.Formats Field CSV

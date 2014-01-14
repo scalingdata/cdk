@@ -2,7 +2,7 @@
 <comments
   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
   xsi:noNamespaceSchemaLocation='comments.xsd'
-  name="CDK_0.8.1_to_CDK_0.9.0"
+  name="CDK_0.8.1_to_CDK_0.9.1"
   jdversion="1.1.1">
 
 <!-- This file contains comments for a JDiff report. -->
@@ -677,6 +677,12 @@
 </comment>
 <comment>
   <identifier id="com.cloudera.cdk.data.partition.PartitionFunctions.hash_changed(java.lang.String, java.lang.String, int)"/>
+  <text>
+    InsertCommentsHere
+  </text>
+</comment>
+<comment>
+  <identifier id="com.cloudera.cdk.data.partition.PartitionFunctions.toExpression_added(com.cloudera.cdk.data.FieldPartitioner)"/>
   <text>
     InsertCommentsHere
   </text>
