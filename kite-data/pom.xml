@@ -25,7 +25,8 @@
   <modules>
     <module>kite-data-core</module>
     <module>kite-data-crunch</module>
-    <module>kite-data-flume</module>
+    <!-- Disabled for CDH5 (CDH-14681)
+    <module>kite-data-flume</module> -->
     <module>kite-data-hcatalog</module>
     <module>kite-data-hbase</module>
     <module>kite-data-mapreduce</module>
