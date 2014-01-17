@@ -11,6 +11,7 @@ Version 0.11.0 has the following notable changes:
 
 * Morphlines Library
     * Upgraded kite-morphlines-json module from jackson-databind-2.2.1 to jackson-databind-2.3.1.
+    * Fixed CDK-282 `readRCFile` command is broken (Prasanna Rajaperumal via whoschek).
 
 ## Version 0.10.0
 
