@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kitesdk.morphline.base;
+package com.cloudera.cdk.morphline.base;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.kitesdk.morphline.api.Record;
+import com.cloudera.cdk.morphline.api.Record;
 
 import com.google.common.base.Preconditions;
 import com.typesafe.config.Config;
