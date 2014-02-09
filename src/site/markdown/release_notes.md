@@ -3,11 +3,30 @@
 All past CDK releases are documented on this page. Upcoming release dates can be found in
 [JIRA](https://issues.cloudera.org/browse/CDK#selectedTab=com.atlassian.jira.plugin.system.project%3Aversions-panel).
 
+## Version 0.9.2
+
+Release date: TBD
+
+Version 0.9.2 includes the following bug fixes:
+
+* CDK-300: SolrLocator should delete the tmp dir that it creates as soon as possible, not just on VM exit
+* CDK-290: solrCell morphline command fails with Tika RFC822Parser if log4j TRACE mode is enabled and multiple MIME parts are contained in the message
+* CDK-282: readRCFile command is broken
+* CDK-305: splitKeyValue morphline command should also support multi-character separators as well as a regex separators
+* CDK-271: Add "addEmptyStrings" parameter to readCSV morphline command to indicate whether or not to add zero length strings to the output field.
+* CDK-286: Upgrade kite-morphlines-saxon module from Saxon-HE-9.5.1-3 to Saxon-HE-9.5.1-4
+* Upgrade kite-morphlines-metrics-servlets module from jetty-8.1.13.v20130916 to jetty-8.1.14.v20131031
+* CDK-315: Improve morphline import performance if all commands are specified via fully qualified class names
+* CDK-310: addValuesIfAbsent morphline command should avoids performance degradation for large N
+* regex performance enhancement
+* optimize field expressions by separating compilation and evaluation phase
+
 ## Version 0.9.1
 
 Release date: January 13, 2014
 
 Version 0.9.1 includes the following bug fixes:
+
 * CDK-249: Correctly add new partitions to the Hive MetaStore
 * CDK-260: Fixed the date-format partition function in expressions
 * CDK-266: Fixed file name uniqueness
