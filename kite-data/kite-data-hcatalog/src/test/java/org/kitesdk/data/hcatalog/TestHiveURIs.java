@@ -52,22 +52,7 @@ public class TestHiveURIs extends TestFileSystemURIs {
         repo instanceof HCatalogDatasetRepository);
     MetadataProvider provider = ((HCatalogDatasetRepository) repo)
         .getMetadataProvider();
-    Assert.assertTrue("Repo is using a HCatalogManagedMetadataProvider",
-        provider instanceof HCatalogManagedMetadataProvider);
-  }
-
-  @Test
-  public void testManagedURIWithRootPath() {
-    // URIs with "/" as the path should open managed repositories
-    DatasetRepository repo = DatasetRepositories.open(
-        "repo:hive:/");
-
-    Assert.assertNotNull("Received a repository", repo);
-    Assert.assertTrue("Repo should be a HCatalogDatasetRepository",
-        repo instanceof HCatalogDatasetRepository);
-    MetadataProvider provider = ((HCatalogDatasetRepository) repo)
-        .getMetadataProvider();
-    Assert.assertTrue("Repo is using a HCatalogManagedMetadataProvider",
+    Assert.assertTrue("Repo should be using a HCatalogManagedMetadataProvider",
         provider instanceof HCatalogManagedMetadataProvider);
   }
 
@@ -75,7 +60,7 @@ public class TestHiveURIs extends TestFileSystemURIs {
   public void testManagedURIWithHostAndPort() {
     try {
       // This should cause a failure when trying to connect to meta-host
-      DatasetRepositories.open("repo:hive://meta-host:1234/");
+      DatasetRepositories.open("repo:hive://meta-host:1234");
       Assert.fail("Failed to set the MetaStore host via repo URI");
     } catch (RuntimeException ex) {
       Assert.assertEquals(MetaException.class, ex.getCause().getClass());
@@ -94,6 +79,16 @@ public class TestHiveURIs extends TestFileSystemURIs {
     // this will fail.
   }
 
+  @Test(expected=DatasetRepositoryException.class)
+  public void testExternalOpaqueURIFailsWithoutHDFSInfo() {
+    DatasetRepositories.open("repo:hive:tmp/hive-repo");
+
+    // if no HDFS connection options are given, then the constructed URI will
+    // look like this: hdfs:/tmp/hive-repo, but without the HDFS host and port,
+    // this will fail.
+  }
+
+  @SuppressWarnings("deprecation")
   @Test
   public void testExternalURI() {
     URI hdfsUri = getDFS().getUri();
@@ -132,6 +127,41 @@ public class TestHiveURIs extends TestFileSystemURIs {
       DatasetRepositories.open(
           "repo:hive://meta-host:1234/tmp/data?hdfs-host=" + hdfsUri.getHost() +
           "&hdfs-port=" + hdfsUri.getPort());
+      Assert.fail("Failed to set the MetaStore host via repo URI");
+    } catch (RuntimeException ex) {
+      Assert.assertEquals(MetaException.class, ex.getCause().getClass());
+      // The exception isn't properly wrapped as a cause, but this will check
+      // that the hostname is used and in the exception message.
+      Assert.assertTrue(ex.getCause().getMessage().contains("meta-host"));
+    }
+  }
+
+  @Test
+  public void testExternalURIWithRootPath() {
+    URI hdfsUri = getDFS().getUri();
+    URI repoUri = URI.create("repo:hive:/?hdfs-host=" + hdfsUri.getHost() +
+        "&hdfs-port=" + hdfsUri.getPort());
+    DatasetRepository repo = DatasetRepositories.open(repoUri);
+    Assert.assertNotNull("Received a repository", repo);
+    Assert.assertTrue("Repo should be a FileSystemDatasetRepository",
+        repo instanceof FileSystemDatasetRepository);
+    MetadataProvider provider = ((FileSystemDatasetRepository) repo)
+        .getMetadataProvider();
+    Assert.assertTrue("Repo should be using a HCatalogExternalMetadataProvider",
+        provider instanceof HCatalogExternalMetadataProvider);
+  }
+
+  @Test
+  public void testExternalURIWithHostAndPortAndRootPath() {
+    URI hdfsUri = getDFS().getUri();
+    URI repoUri = URI.create("repo:hive://meta-host:1234/?hdfs-host=" +
+        hdfsUri.getHost() + "&hdfs-port=" + hdfsUri.getPort());
+    try {
+      DatasetRepository repo = DatasetRepositories.open(repoUri);
+      // This should cause a failure when trying to connect to meta-host
+      DatasetRepositories.open(
+          "repo:hive://meta-host:1234/tmp/data?hdfs-host=" + hdfsUri.getHost() +
+              "&hdfs-port=" + hdfsUri.getPort());
       Assert.fail("Failed to set the MetaStore host via repo URI");
     } catch (RuntimeException ex) {
       Assert.assertEquals(MetaException.class, ex.getCause().getClass());
