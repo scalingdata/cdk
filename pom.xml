@@ -69,7 +69,6 @@
     <url>https://github.com/cloudera/cdk</url>
     <developerConnection>scm:git:git@github.com:cloudera/cdk.git
     </developerConnection>
-    <tag>release-0.9.2</tag>
   </scm>
 
   <issueManagement>
@@ -158,7 +157,7 @@
     <vers.maven-javadoc-plugin>2.9.1</vers.maven-javadoc-plugin>
     <vers.maven-plugin-plugin>3.1</vers.maven-plugin-plugin>
     <vers.maven-project-info-reports-plugin>2.7</vers.maven-project-info-reports-plugin>
-    <vers.maven-release-plugin>2.4.1</vers.maven-release-plugin>
+    <vers.maven-release-plugin>2.5</vers.maven-release-plugin>
     <vers.maven-site-plugin>3.3</vers.maven-site-plugin>
     <vers.maven-source-plugin>2.2.1</vers.maven-source-plugin>
     <vers.maven-surefire-plugin>2.14.1</vers.maven-surefire-plugin>
