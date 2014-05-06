@@ -2,12 +2,14 @@ OK: com.cloudera.cdk.data.ConcurrentSchemaModificationException Class
 OK: com.cloudera.cdk.data.DatasetIOException Class
 OK: com.cloudera.cdk.data.DatasetNotFoundException Class
 OK: com.cloudera.cdk.data.partition.DateFormatPartitioner Class
+MISSING @SINCE TAG: com.cloudera.cdk.morphline.stdlib.HeadBuilder Class
 OK: com.cloudera.cdk.data.IncompatibleSchemaException Class
 OK: com.cloudera.cdk.data.Key Class
 OK: com.cloudera.cdk.data.Key.Builder Class
 MISSING @SINCE TAG: com.cloudera.cdk.morphline.base.PrettyPrinter Class
 OK: com.cloudera.cdk.data.RandomAccessDataset Interface
 OK: com.cloudera.cdk.data.RandomAccessDatasetRepository Interface
+MISSING @SINCE TAG: com.cloudera.cdk.morphline.stdlib.SampleBuilder Class
 OK: com.cloudera.cdk.data.SchemaNotFoundException Class
 OK: com.cloudera.cdk.data.SchemaValidationException Class
 OK: com.cloudera.cdk.data.SerializationException Class

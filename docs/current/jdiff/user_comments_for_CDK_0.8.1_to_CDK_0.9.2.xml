@@ -2,7 +2,7 @@
 <comments
   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
   xsi:noNamespaceSchemaLocation='comments.xsd'
-  name="CDK_0.8.1_to_CDK_0.9.1"
+  name="CDK_0.8.1_to_CDK_0.9.2"
   jdversion="1.1.1">
 
 <!-- This file contains comments for a JDiff report. -->
@@ -743,6 +743,24 @@
 </comment>
 <comment>
   <identifier id="com.cloudera.cdk.morphline.maxmind"/>
+  <text>
+    InsertCommentsHere
+  </text>
+</comment>
+<comment>
+  <identifier id="com.cloudera.cdk.morphline.stdlib"/>
+  <text>
+    InsertCommentsHere
+  </text>
+</comment>
+<comment>
+  <identifier id="com.cloudera.cdk.morphline.stdlib.HeadBuilder"/>
+  <text>
+    InsertCommentsHere
+  </text>
+</comment>
+<comment>
+  <identifier id="com.cloudera.cdk.morphline.stdlib.SampleBuilder"/>
   <text>
     InsertCommentsHere
   </text>
