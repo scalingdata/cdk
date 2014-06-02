@@ -50,6 +50,7 @@ class FileSystemDatasetWriter<E> implements DatasetWriter<E> {
   private DataFileWriter<E> dataFileWriter;
   private DatumWriter<E> writer;
   private ReaderWriterState state;
+  private int count = 0;
 
   public FileSystemDatasetWriter(FileSystem fileSystem, Path path,
     Schema schema, boolean enableCompression) {
@@ -90,6 +91,8 @@ class FileSystemDatasetWriter<E> implements DatasetWriter<E> {
       throw new DatasetWriterException("Unable to create writer to path:" + pathTmp, e);
     }
 
+    this.count = 0;
+
     state = ReaderWriterState.OPEN;
   }
 
@@ -100,6 +103,7 @@ class FileSystemDatasetWriter<E> implements DatasetWriter<E> {
 
     try {
       dataFileWriter.append(entity);
+      count += 1;
     } catch (IOException e) {
       throw new DatasetWriterException(
         "Unable to write entity:" + entity + " with writer:" + dataFileWriter, e);
@@ -134,14 +138,27 @@ class FileSystemDatasetWriter<E> implements DatasetWriter<E> {
 
       logger.debug("Committing pathTmp:{} to path:{}", pathTmp, path);
 
-      try {
-        if (!fileSystem.rename(pathTmp, path)) {
+      if (count > 0) {
+        // commit the temp file
+        try {
+          if (!fileSystem.rename(pathTmp, path)) {
+            throw new DatasetWriterException(
+                "Failed to move " + pathTmp + " to " + path);
+          }
+        } catch (IOException e) {
           throw new DatasetWriterException(
-            "Failed to move " + pathTmp + " to " + path);
+              "Internal error while trying to commit path:" + pathTmp, e);
         }
-      } catch (IOException e) {
-        throw new DatasetWriterException(
-          "Internal error while trying to commit path:" + pathTmp, e);
+      } else {
+        // discard the temp file
+        try {
+          if (!fileSystem.delete(pathTmp, true)) {
+            throw new DatasetWriterException("Failed to delete " + pathTmp);
+          }
+        } catch (IOException e) {
+          throw new DatasetWriterException(
+              "Failed to remove temporary file " + pathTmp, e);
+        }
       }
 
       state = ReaderWriterState.CLOSED;

@@ -19,6 +19,7 @@ import org.kitesdk.data.Dataset;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.DatasetException;
 import org.kitesdk.data.DatasetReader;
+import org.kitesdk.data.DatasetWriter;
 import org.kitesdk.data.FieldPartitioner;
 import org.kitesdk.data.Format;
 import org.kitesdk.data.Formats;
@@ -295,6 +296,25 @@ public class TestFileSystemDataset extends MiniDFSTest {
     }
 
     Assert.assertNotNull(caught);
+  }
+
+  @Test
+  public void testDiscardEmptyFiles() throws IOException {
+    FileSystemDataset<Record> ds = new FileSystemDataset.Builder()
+        .name("test")
+        .configuration(getConfiguration())
+        .descriptor(new DatasetDescriptor.Builder()
+            .schemaUri(USER_SCHEMA_URL)
+            .format(format)
+            .location(testDirectory)
+            .build())
+        .build();
+
+    DatasetWriter<Record> writer = ds.newWriter();
+    writer.open();
+    writer.close();
+    Assert.assertEquals("Should not contain any files", 0,
+        fileSystem.listStatus(testDirectory).length);
   }
 
   @SuppressWarnings("deprecation")
