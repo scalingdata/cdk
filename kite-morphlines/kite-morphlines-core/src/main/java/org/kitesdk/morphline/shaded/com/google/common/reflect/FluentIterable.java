@@ -32,7 +32,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 
-import javax.annotation.Nullable;
 
 /**
  * {@code FluentIterable} provides a rich interface for manipulating {@code Iterable} instances in a
@@ -129,7 +128,7 @@ abstract class FluentIterable<E> implements Iterable<E> {
    * Returns {@code true} if this fluent iterable contains any object for which
    * {@code equals(element)} is true.
    */
-  public final boolean contains(@Nullable Object element) {
+  public final boolean contains(Object element) {
     return Iterables.contains(iterable, element);
   }
 
