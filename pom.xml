@@ -141,7 +141,7 @@
     <vers.plexus-utils>3.0</vers.plexus-utils>
     <vers.rat>0.9</vers.rat>
     <vers.slf4j>${cdh.slf4j.version}</vers.slf4j>
-    <vers.codahale.metrics>3.0.1</vers.codahale.metrics>
+    <vers.codahale.metrics>3.0.2</vers.codahale.metrics>
     <vers.typesafe.config>1.0.2</vers.typesafe.config>
     <vers.solr>${cdh.solr.version}</vers.solr>
     <solr.expected.version>${cdh.solr.version}</solr.expected.version> <!-- sanity check to verify we actually run against the expected version rather than some outdated version -->
