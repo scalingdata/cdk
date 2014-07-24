@@ -109,7 +109,8 @@ public class TestMain {
         contains("Usage: {} [options] [command] [command options]"),
         eq(Main.DEFAULT_PROGRAM_NAME));
     verify(console).info(contains("Options"));
-    verify(console, times(2)).info(anyString(), any(Object[].class)); // -v, --version
+    verify(console, times(2)).info(anyString(), anyString(), anyString(), anyString(),
+        anyString()); // -v, --version
     verify(console).info(contains("Commands"));
     verify(console).info(anyString(), eq("create"), anyString());
     verify(console).info(anyString(), eq("delete"), anyString());
@@ -137,7 +138,7 @@ public class TestMain {
     verify(console).info(contains("Examples"));
     verify(console).info(anyString(), contains("# this is a comment"));
     verify(console).info(anyString(),
-        eq(new Object[] {Main.DEFAULT_PROGRAM_NAME, "test", "test dataset-name"}));
+        eq(Main.DEFAULT_PROGRAM_NAME), eq("test"), eq("test dataset-name"));
     assertEquals(0, rc);
   }
 
@@ -153,7 +154,7 @@ public class TestMain {
     verify(console).info(contains("Examples"));
     verify(console).info(anyString(), contains("this is a comment"));
     verify(console).info(anyString(),
-        eq(new Object[] {Main.DEFAULT_PROGRAM_NAME, "test", "test dataset-name"}));
+        eq(Main.DEFAULT_PROGRAM_NAME), eq("test"), eq("test dataset-name"));
     assertEquals(0, rc);
   }
 
@@ -169,7 +170,7 @@ public class TestMain {
     verify(console).info(contains("Examples"));
     verify(console).info(anyString(), contains("this is a comment"));
     verify(console).info(anyString(),
-        eq(new Object[] {"datasets", "test", "test dataset-name"}));
+        eq("datasets"), eq("test"), eq("test dataset-name"));
     assertEquals(0, rc);
   }
 
