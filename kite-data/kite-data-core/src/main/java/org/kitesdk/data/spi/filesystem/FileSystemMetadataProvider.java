@@ -173,7 +173,7 @@ public class FileSystemMetadataProvider extends AbstractMetadataProvider {
     Preconditions.checkNotNull(namespace, "Namespace cannot be null");
     Preconditions.checkNotNull(name, "Dataset name cannot be null");
     Preconditions.checkNotNull(descriptor, "Descriptor cannot be null");
-    Compatibility.checkAndWarn(name, descriptor);
+    Compatibility.checkAndWarn(namespace, name, descriptor);
 
     LOG.debug("Saving dataset metadata name:{} descriptor:{}", name,
         descriptor);
@@ -203,7 +203,7 @@ public class FileSystemMetadataProvider extends AbstractMetadataProvider {
     Preconditions.checkNotNull(namespace, "Namespace cannot be null");
     Preconditions.checkNotNull(name, "Dataset name cannot be null");
     Preconditions.checkNotNull(descriptor, "Descriptor cannot be null");
-    Compatibility.checkAndWarn(name, descriptor);
+    Compatibility.checkAndWarn(namespace, name, descriptor);
 
     LOG.debug("Saving dataset metadata name: {} descriptor: {}", name,
         descriptor);
