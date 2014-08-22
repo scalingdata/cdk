@@ -81,7 +81,7 @@ public class FileSystemMetadataProvider extends AbstractMetadataProvider {
 
   private static final Set<String> RESERVED_PROPERTIES = Sets.newHashSet(
       PARTITION_EXPRESSION_FIELD_NAME, VERSION_FIELD_NAME, FORMAT_FIELD_NAME,
-      LOCATION_FIELD_NAME);
+      LOCATION_FIELD_NAME, COMPRESSION_TYPE_FIELD_NAME);
 
   private final Configuration conf;
   private final Path rootDirectory;
@@ -136,6 +136,9 @@ public class FileSystemMetadataProvider extends AbstractMetadataProvider {
     if (properties.containsKey(FORMAT_FIELD_NAME)) {
       builder.format(Accessor.getDefault().newFormat(
           properties.getProperty(FORMAT_FIELD_NAME)));
+    }
+    if (properties.containsKey(COMPRESSION_TYPE_FIELD_NAME)) {
+      builder.compressionType(properties.getProperty(COMPRESSION_TYPE_FIELD_NAME));
     }
     if (properties.containsKey(PARTITION_EXPRESSION_FIELD_NAME)) {
       builder.partitionStrategy(Accessor.getDefault().fromExpression(properties
@@ -460,6 +463,7 @@ public class FileSystemMetadataProvider extends AbstractMetadataProvider {
     Properties properties = new Properties();
     properties.setProperty(VERSION_FIELD_NAME, METADATA_VERSION);
     properties.setProperty(FORMAT_FIELD_NAME, descriptor.getFormat().getName());
+    properties.setProperty(COMPRESSION_TYPE_FIELD_NAME, descriptor.getCompressionType().getName());
 
     final URI dataLocation = descriptor.getLocation();
     if (dataLocation != null) {

@@ -73,16 +73,17 @@ public class DatasetDescriptor {
   private final Map<String, String> properties;
   private final PartitionStrategy partitionStrategy;
   private final ColumnMapping columnMappings;
+  private final CompressionType compressionType;
 
   /**
    * Create an instance of this class with the supplied {@link Schema},
    * optional URL, {@link Format}, optional location URL, and optional
    * {@link PartitionStrategy}.
    */
-  public DatasetDescriptor(Schema schema, @Nullable URL schemaUrl, Format format,
+  public DatasetDescriptor(Schema schema, @Nullable URI schemaUri, Format format,
       @Nullable URI location, @Nullable Map<String, String> properties,
       @Nullable PartitionStrategy partitionStrategy) {
-    this(schema, schemaUrl, format, location, properties, partitionStrategy,
+    this(schema, schemaUri, format, location, properties, partitionStrategy,
         null);
   }
 
@@ -93,13 +94,13 @@ public class DatasetDescriptor {
    *
    * @since 0.14.0
    */
-  public DatasetDescriptor(Schema schema, @Nullable URL schemaUrl,
+  public DatasetDescriptor(Schema schema, @Nullable URI schemaUri,
       Format format, @Nullable URI location,
       @Nullable Map<String, String> properties,
       @Nullable PartitionStrategy partitionStrategy,
       @Nullable ColumnMapping columnMapping) {
-    this(schema, toURI(schemaUrl), format, location,
-        properties, partitionStrategy, columnMapping, null);
+    this(schema, schemaUri, format, location, properties, partitionStrategy,
+        columnMapping, null);
   }
 
   /**
@@ -120,6 +121,7 @@ public class DatasetDescriptor {
     Preconditions.checkArgument(
         (location == null) || (location.getScheme() != null),
         "Location URIs must be fully-qualified and have a FS scheme.");
+    checkCompressionType(format, compressionType);
 
     this.schema = schema;
     this.schemaUri = schemaUri;
@@ -133,6 +135,10 @@ public class DatasetDescriptor {
     }
     this.partitionStrategy = partitionStrategy;
     this.columnMappings = columnMapping;
+
+    // if no compression format is present, get the default from the format
+    this.compressionType = compressionType == null ?
+        this.format.getDefaultCompressionType() : compressionType;
   }
 
   /**
@@ -260,6 +266,17 @@ public class DatasetDescriptor {
   }
 
   /**
+   * Get the {@link CompressionType}
+   *
+   * @return the compression format
+   *
+   * @since 0.17.0
+   */
+  public CompressionType getCompressionType() {
+    return compressionType;
+  }
+
+  /**
    * Returns true if an associated dataset is partitioned (that is, has an
    * associated {@link PartitionStrategy}), false otherwise.
    */
@@ -280,7 +297,7 @@ public class DatasetDescriptor {
   @Override
   public int hashCode() {
     return Objects.hashCode(schema, format, location, properties,
-        partitionStrategy, columnMappings);
+        partitionStrategy, columnMappings, compressionType);
   }
 
   @Override
@@ -298,7 +315,8 @@ public class DatasetDescriptor {
         Objects.equal(location, other.location) &&
         Objects.equal(properties, other.properties) &&
         Objects.equal(partitionStrategy, other.partitionStrategy) &&
-        Objects.equal(columnMappings, columnMappings));
+        Objects.equal(columnMappings, other.columnMappings) &&
+        Objects.equal(compressionType, other.compressionType));
   }
 
   @Override
@@ -308,7 +326,8 @@ public class DatasetDescriptor {
         .add("schema", schema)
         .add("location", location)
         .add("properties", properties)
-        .add("partitionStrategy", partitionStrategy);
+        .add("partitionStrategy", partitionStrategy)
+        .add("compressionType", compressionType);
     if (isColumnMapped()) {
       helper.add("columnMapping", columnMappings);
     }
@@ -333,6 +352,7 @@ public class DatasetDescriptor {
     private Map<String, String> properties;
     private PartitionStrategy partitionStrategy;
     private ColumnMapping columnMapping;
+    private CompressionType compressionType;
 
     public Builder() {
       this.properties = Maps.newHashMap();
@@ -483,7 +503,7 @@ public class DatasetDescriptor {
 
     /**
      * Configure the dataset's schema by using the schema from an existing Avro
-     * data file. A schema is required, and can be set using one of the methods 
+     * data file. A schema is required, and can be set using one of the methods
      * {@code schema}, {@code schemaLiteral}, {@code schemaUri}, or
      * {@code schemaFromAvroDataFile}.
      *
@@ -528,7 +548,7 @@ public class DatasetDescriptor {
 
     /**
      * Configure the dataset's schema by using the schema from an existing Avro
-     * data file. A schema is required, and can be set using one of the methods 
+     * data file. A schema is required, and can be set using one of the methods
      * {@code schema}, {@code schemaLiteral}, {@code schemaUri}, or
      * {@code schemaFromAvroDataFile}.
      *
@@ -858,6 +878,35 @@ public class DatasetDescriptor {
      */
     public Builder columnMappingUri(String uri) throws IOException {
       return columnMappingUri(URI.create(uri));
+    }
+
+    /**
+     * Configure the dataset's compression format (optional). If not set,
+     * default to {@link CompressionType#Snappy}.
+     *
+     * @param compressionType the compression format
+     *
+     * @return This builder for method chaining
+     *
+     * @since 0.17.0
+     */
+    public Builder compressionType(CompressionType compressionType) {
+      this.compressionType = compressionType;
+      return this;
+    }
+
+    /**
+     * Configure the dataset's compression format (optional). If not set,
+     * default to {@link CompressionType#Snappy}.
+     *
+     * @param compressionTypeName  the name of the compression format
+     *
+     * @return This builder for method chaining
+     *
+     * @since 0.17.0
+     */
+    public Builder compressionType(String compressionTypeName) {
+      return compressionType(CompressionType.forName(compressionTypeName));
     }
 
     /**
