@@ -24,6 +24,7 @@
 
   <modules>
     <module>kite-data-core</module>
+    <module>kite-data-hive</module>
     <module>kite-data-crunch</module>
     <!-- Disabled for CDH5 (CDH-14681)
     <module>kite-data-flume</module> -->
