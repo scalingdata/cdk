@@ -80,10 +80,10 @@ public class DatasetDescriptor {
    * optional URL, {@link Format}, optional location URL, and optional
    * {@link PartitionStrategy}.
    */
-  public DatasetDescriptor(Schema schema, @Nullable URI schemaUri, Format format,
+  public DatasetDescriptor(Schema schema, @Nullable URL schemaUrl, Format format,
       @Nullable URI location, @Nullable Map<String, String> properties,
       @Nullable PartitionStrategy partitionStrategy) {
-    this(schema, schemaUri, format, location, properties, partitionStrategy,
+    this(schema, schemaUrl, format, location, properties, partitionStrategy,
         null);
   }
 
@@ -94,12 +94,12 @@ public class DatasetDescriptor {
    *
    * @since 0.14.0
    */
-  public DatasetDescriptor(Schema schema, @Nullable URI schemaUri,
+  public DatasetDescriptor(Schema schema, @Nullable URL schemaUrl,
       Format format, @Nullable URI location,
       @Nullable Map<String, String> properties,
       @Nullable PartitionStrategy partitionStrategy,
       @Nullable ColumnMapping columnMapping) {
-    this(schema, schemaUri, format, location, properties, partitionStrategy,
+    this(schema, toURI(schemaUrl), format, location, properties, partitionStrategy,
         columnMapping, null);
   }
 
