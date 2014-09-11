@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.kitesdk</groupId>
     <artifactId>kite-data</artifactId>
-    <version>0.16.1-SNAPSHOT</version>
+    <version>0.15.0-cdh5.2.0-SNAPSHOT</version>
   </parent>
 
   <name>Kite Data Hive Module</name>
@@ -107,20 +107,6 @@
     <dependency>
       <groupId>org.apache.avro</groupId>
       <artifactId>avro</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.twitter</groupId>
-      <artifactId>parquet-hive-bundle</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.hadoop</groupId>
-          <artifactId>hadoop-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.hive</groupId>
-          <artifactId>hive-exec</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <!-- These should be compile-dependencies
