@@ -28,6 +28,10 @@ final class AccessorImpl extends Accessor {
         { CompressionType.Uncompressed });
     }
   }
+  @Override
+  public PartitionKey newPartitionKey(Object... values) {
+    return new PartitionKey(values);
+  }
 
   @Override
   @SuppressWarnings("deprecation")

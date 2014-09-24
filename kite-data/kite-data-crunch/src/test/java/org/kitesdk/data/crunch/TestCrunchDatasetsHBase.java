@@ -89,6 +89,7 @@ public class TestCrunchDatasetsHBase {
   }
 
   @Test
+  @SuppressWarnings("deprecation") // still testing asTarget/asSource(Dataset)
   public void testGeneric() throws IOException {
     String datasetName = tableName + ".TestGenericEntity";
 
@@ -111,6 +112,7 @@ public class TestCrunchDatasetsHBase {
   }
 
   @Test
+  @SuppressWarnings("deprecation") // still testing asTarget/asSource(Dataset)
   public void testSourceView() throws IOException {
     String datasetName = tableName + ".TestGenericEntity";
 
@@ -130,7 +132,7 @@ public class TestCrunchDatasetsHBase {
 
     Pipeline pipeline = new MRPipeline(TestCrunchDatasetsHBase.class, HBaseTestUtils.getConf());
     PCollection<GenericRecord> data = pipeline.read(
-        CrunchDatasets.asSource(inputView));
+        CrunchDatasets.asSource(inputView, GenericRecord.class));
     pipeline.write(data, CrunchDatasets.asTarget(outputDataset), Target.WriteMode.APPEND);
     pipeline.run();
 

@@ -20,6 +20,7 @@ import java.net.URI;
 import org.apache.avro.generic.IndexedRecord;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.InputFormat;
+import org.kitesdk.data.Dataset;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.Key;
 import org.kitesdk.data.spi.PartitionKey;
@@ -78,6 +79,21 @@ class DaoDataset<E> extends AbstractDataset<E> implements RandomAccessDataset<E>
   @Override
   public DatasetDescriptor getDescriptor() {
     return descriptor;
+  }
+
+  @Override
+  public Dataset<E> getPartition(PartitionKey key, boolean autoCreate) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void dropPartition(PartitionKey key) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Iterable<Dataset<E>> getPartitions() {
+    throw new UnsupportedOperationException();
   }
 
   @Override

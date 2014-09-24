@@ -17,7 +17,9 @@ package org.kitesdk.data.spi.filesystem;
 
 import javax.annotation.Nullable;
 import org.kitesdk.data.spi.Compatibility;
-import org.kitesdk.data.spi.PartitionKey;
+import org.kitesdk.data.PartitionKey;
+import org.kitesdk.data.impl.Accessor;
+import org.kitesdk.data.spi.SchemaValidationUtil;
 import org.kitesdk.data.Dataset;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.DatasetIOException;
@@ -147,7 +149,8 @@ public class FileSystemDatasetRepository extends AbstractDatasetRepository
         .descriptor(newDescriptor)
         .type(type)
         .uri(new URIBuilder(getUri(), namespace, name).build())
-        .partitionKey(newDescriptor.isPartitioned() ? new PartitionKey() : null)
+        .partitionKey(newDescriptor.isPartitioned() ? 
+            Accessor.getDefault().newPartitionKey() : null)
         .partitionListener(getPartitionListener())
         .build();
   }
@@ -176,7 +179,8 @@ public class FileSystemDatasetRepository extends AbstractDatasetRepository
         .descriptor(updatedDescriptor)
         .type(type)
         .uri(new URIBuilder(getUri(), namespace, name).build())
-        .partitionKey(updatedDescriptor.isPartitioned() ? new PartitionKey() : null)
+        .partitionKey(updatedDescriptor.isPartitioned() ? 
+            Accessor.getDefault().newPartitionKey() : null)
         .partitionListener(getPartitionListener())
         .build();
   }
@@ -197,7 +201,8 @@ public class FileSystemDatasetRepository extends AbstractDatasetRepository
         .descriptor(descriptor)
         .type(type)
         .uri(new URIBuilder(getUri(), namespace, name).build())
-        .partitionKey(descriptor.isPartitioned() ? new PartitionKey() : null)
+        .partitionKey(descriptor.isPartitioned() ?
+            Accessor.getDefault().newPartitionKey() : null)
         .partitionListener(getPartitionListener())
         .build();
 
@@ -358,7 +363,7 @@ public class FileSystemDatasetRepository extends AbstractDatasetRepository
 
       values.add(PathConversion.valueForDirname(fp, schema, stringValue));
     }
-    return new PartitionKey(values.toArray(new Object[values.size()]));
+    return Accessor.getDefault().newPartitionKey(values.toArray(new Object[values.size()]));
   }
 
   @Override
