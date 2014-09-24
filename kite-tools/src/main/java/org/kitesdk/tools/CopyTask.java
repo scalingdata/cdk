@@ -28,4 +28,12 @@ public class CopyTask<E> extends TransformTask<E, E> {
     super(from, to, IdentityFn.<E>getInstance());
   }
 
+  /**
+   * @deprecated will be removed in 0.17.0; use CopyTask(View, View)
+   */
+  @Deprecated
+  public CopyTask(View<E> from, View<E> to, Class<E> entityClass) {
+    super(from, to, IdentityFn.<E>getInstance());
+  }
+
 }
