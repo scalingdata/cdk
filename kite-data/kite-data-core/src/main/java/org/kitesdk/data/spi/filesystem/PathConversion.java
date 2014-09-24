@@ -87,10 +87,6 @@ public class PathConversion {
     return new Path(pathBuilder.toString());
   }
 
-  public <T> T valueForDirname(FieldPartitioner<?, T> field, String name) {
-    return valueForDirname(field, schema, name);
-  }
-
   private static final Splitter PART_SEP = Splitter.on('=');
   private static final Joiner PART_JOIN = Joiner.on('=');
   private static final Map<Class<?>, Integer> WIDTHS =
@@ -102,28 +98,23 @@ public class PathConversion {
           .build();
 
   public static <T> String dirnameForValue(FieldPartitioner<?, T> field, T value) {
-    return PART_JOIN.join(field.getName(), valueToString(field, value));
-  }
-
-  public static <T> String valueToString(FieldPartitioner<?, T> field, T value) {
     try{
-      return URLEncoder.encode(
-          Conversions.makeString(value, WIDTHS.get(field.getClass())),
-          "UTF-8");
+      return PART_JOIN.join(field.getName(),
+          URLEncoder.encode(Conversions.makeString(value, WIDTHS.get(field.getClass())), "UTF-8"));
     } catch (UnsupportedEncodingException e) {
       throw new AssertionError("Unable to find UTF-8 encoding.");
     }
   }
 
-  public static <T> T valueForDirname(FieldPartitioner<?, T> field, Schema schema, String name) {
-    return Conversions.convert(dirnameToValueString(name),
+  public <T> T valueForDirname(FieldPartitioner<?, T> field, String name) {
+    // this could check that the field name matches the directory name
+    return Conversions.convert(valueStringForDirname(name),
         SchemaUtil.getPartitionType(field, schema));
   }
 
-  public static String dirnameToValueString(String name) {
+  public String valueStringForDirname(String name) {
     try {
-      return URLDecoder.decode(
-          Iterables.getLast(PART_SEP.split(name)), "UTF-8");
+      return URLDecoder.decode(Iterables.getLast(PART_SEP.split(name)), "UTF-8");
     } catch (UnsupportedEncodingException e) {
       throw new AssertionError("Unable to find UTF-8 encoding.");
     }

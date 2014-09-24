@@ -52,6 +52,12 @@ public class HashFieldPartitioner extends FieldPartitioner<Object, Integer> {
   }
 
   @Override
+  @Deprecated
+  public Integer valueFromString(String stringValue) {
+    return Integer.parseInt(stringValue);
+  }
+
+  @Override
   public Predicate<Integer> project(Predicate<Object> predicate) {
     if (predicate instanceof Exists) {
       return Predicates.exists();

@@ -17,6 +17,7 @@ package org.kitesdk.data.flume;
 
 import java.net.URI;
 import org.kitesdk.data.Dataset;
+import org.kitesdk.data.spi.DatasetRepository;
 import org.kitesdk.data.spi.FieldPartitioner;
 import org.kitesdk.data.spi.PartitionKey;
 import org.kitesdk.data.PartitionStrategy;
@@ -113,8 +114,7 @@ public class Log4jAppender extends org.apache.flume.clients.log4jappender.Log4jA
       key = PartitionKey.partitionKeyForEntity(partitionStrategy, message, key);
       int i = 0;
       for (FieldPartitioner fp : partitionStrategy.getFieldPartitioners()) {
-        hdrs.put(PARTITION_PREFIX + fp.getName(),
-            PathConversion.valueToString(fp, key.get(i++)));
+        hdrs.put(PARTITION_PREFIX + fp.getName(), fp.valueToString(key.get(i++)));
       }
     }
   }
