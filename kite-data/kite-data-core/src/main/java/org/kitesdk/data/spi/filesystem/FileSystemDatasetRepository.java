@@ -311,8 +311,8 @@ public class FileSystemDatasetRepository extends AbstractDatasetRepository
   }
 
   @Override
-  public TemporaryDatasetRepository getTemporaryRepository(String key) {
-    return new TemporaryFileSystemDatasetRepository(conf, rootDirectory, key);
+  public TemporaryDatasetRepository getTemporaryRepository(String namespace, String key) {
+    return new TemporaryFileSystemDatasetRepository(conf, rootDirectory, namespace, key);
   }
 
   private Path pathForDataset(String namespace, String name) {
