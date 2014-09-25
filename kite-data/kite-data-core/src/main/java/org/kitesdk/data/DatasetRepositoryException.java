@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2013 Cloudera Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,23 +17,33 @@ package org.kitesdk.data;
 
 /**
  * <p>
- * Exception thrown when a schema update is not compatible
- * with the previous schema (or schemas) or with existing
- * datasets (if shared storage is used, for example).
+ * Exception thrown for dataset repository-related failures.
+ * </p>
  * <p>
- * @since 0.9.0
+ * Implementations of the {@link DatasetRepository} interface throw this
+ * exception if any of their operations fail. This is a runtime (unchecked)
+ * exception.
+ * </p>
+ *
+ * @see DatasetRepository
+ * @since 0.2.0
  */
-public class IncompatibleSchemaException extends DatasetException {
+public class DatasetRepositoryException extends DatasetException {
 
-  public IncompatibleSchemaException(String message) {
+  public DatasetRepositoryException() {
+    super();
+  }
+
+  public DatasetRepositoryException(String message) {
     super(message);
   }
-  
-  public IncompatibleSchemaException(String message, Throwable cause) {
+
+  public DatasetRepositoryException(String message, Throwable cause) {
     super(message, cause);
   }
-  
-  public IncompatibleSchemaException(Throwable cause) {
+
+  public DatasetRepositoryException(Throwable cause) {
     super(cause);
   }
+
 }

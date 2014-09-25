@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.DatasetIOException;
+import org.kitesdk.data.DatasetRepositoryException;
 import org.kitesdk.data.Datasets;
 import org.kitesdk.data.MiniDFSTest;
 import org.kitesdk.data.spi.DatasetRepository;
@@ -68,7 +69,7 @@ public class TestDefaultConfigurationFileSystem extends MiniDFSTest {
     DefaultConfiguration.set(existing);
   }
 
-  @Test(expected=DatasetIOException.class)
+  @Test(expected=DatasetRepositoryException.class)
   public void testCannotFindHDFS() throws Exception {
     // do not set the default configuration that the loader will use
     Datasets.load("dataset:hdfs:/tmp/datasets/ns/strings");

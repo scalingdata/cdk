@@ -21,7 +21,7 @@ package org.kitesdk.data;
  *
  * @since 0.8.0
  */
-public class DatasetExistsException extends DatasetException {
+public class DatasetExistsException extends DatasetRepositoryException {
   public DatasetExistsException(String message) {
     super(message);
   }

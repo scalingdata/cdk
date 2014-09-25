@@ -22,8 +22,10 @@ import org.kitesdk.data.impl.Accessor;
 import org.kitesdk.data.spi.SchemaValidationUtil;
 import org.kitesdk.data.Dataset;
 import org.kitesdk.data.DatasetDescriptor;
+import org.kitesdk.data.DatasetException;
 import org.kitesdk.data.DatasetIOException;
 import org.kitesdk.data.DatasetNotFoundException;
+import org.kitesdk.data.DatasetRepositoryException;
 import org.kitesdk.data.spi.FieldPartitioner;
 import org.kitesdk.data.PartitionStrategy;
 import org.kitesdk.data.spi.AbstractDatasetRepository;
@@ -44,6 +46,7 @@ import org.apache.avro.Schema;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.kitesdk.data.IncompatibleSchemaException;
 import org.kitesdk.data.spi.TemporaryDatasetRepository;
 import org.kitesdk.data.spi.TemporaryDatasetRepositoryAccessor;
 import org.kitesdk.data.URIBuilder;
@@ -52,11 +55,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * <p>
- * A {@link org.kitesdk.data.spi.DatasetRepository} that stores data in a Hadoop {@link FileSystem}.
+ * A {@link org.kitesdk.data.DatasetRepository} that stores data in a Hadoop {@link FileSystem}.
  * </p>
  * <p>
  * Given a {@link FileSystem}, a root directory, and a {@link MetadataProvider},
- * this {@link org.kitesdk.data.spi.DatasetRepository} implementation can load and store
+ * this {@link org.kitesdk.data.DatasetRepository} implementation can load and store
  * {@link Dataset}s on both local filesystems as well as the Hadoop Distributed
  * FileSystem (HDFS). Users may directly instantiate this class with the three
  * dependencies above and then perform dataset-related operations using any of
@@ -77,10 +80,10 @@ import org.slf4j.LoggerFactory;
  * effect.
  * </p>
  *
+ * @see org.kitesdk.data.DatasetRepository
  * @see org.kitesdk.data.Dataset
  * @see org.kitesdk.data.DatasetDescriptor
  * @see org.kitesdk.data.PartitionStrategy
- * @see org.kitesdk.data.spi.DatasetRepository
  * @see org.kitesdk.data.spi.MetadataProvider
  */
 public class FileSystemDatasetRepository extends AbstractDatasetRepository
@@ -167,6 +170,36 @@ public class FileSystemDatasetRepository extends AbstractDatasetRepository
     // oldDescriptor is valid if load didn't throw NoSuchDatasetException
     Compatibility.checkUpdate(oldDescriptor, descriptor);
 
+    if (!oldDescriptor.getFormat().equals(descriptor.getFormat())) {
+      throw new DatasetRepositoryException("Cannot change dataset format from " +
+          oldDescriptor.getFormat() + " to " + descriptor.getFormat());
+    }
+
+    final URI oldLocation = oldDescriptor.getLocation();
+    if ((oldLocation != null) && !(oldLocation.equals(descriptor.getLocation()))) {
+      throw new DatasetRepositoryException(
+          "Cannot change the dataset's location");
+    }
+
+    if (oldDescriptor.isPartitioned() != descriptor.isPartitioned()) {
+      throw new DatasetRepositoryException("Cannot change an unpartitioned dataset to " +
+          " partitioned or vice versa.");
+    } else if (oldDescriptor.isPartitioned() && descriptor.isPartitioned() &&
+        !oldDescriptor.getPartitionStrategy().equals(descriptor.getPartitionStrategy())) {
+      throw new DatasetRepositoryException("Cannot change partition strategy from " +
+          oldDescriptor.getPartitionStrategy() + " to " + descriptor.getPartitionStrategy());
+    }
+
+    // check can read records written with old schema using new schema
+    final Schema oldSchema = oldDescriptor.getSchema();
+    final Schema newSchema = descriptor.getSchema();
+    if (!SchemaValidationUtil.canRead(oldSchema, newSchema)) {
+      throw new IncompatibleSchemaException("New schema cannot read data " +
+          "written using " +
+          "old schema. New schema: " + newSchema.toString(true) + "\nOld schema: " +
+          oldSchema.toString(true));
+    }
+
     DatasetDescriptor updatedDescriptor = metadataProvider.update(namespace, name, descriptor);
 
     LOG.debug("Updated dataset: {} schema: {} location: {}", new Object[] {
@@ -225,31 +258,32 @@ public class FileSystemDatasetRepository extends AbstractDatasetRepository
       return false;
     }
 
-    // don't care about the return value here -- if it already doesn't exist
-    // we still need to delete the data directory
-    boolean changed = metadataProvider.delete(namespace, name);
+    boolean changed;
+    try {
+      // don't care about the return value here -- if it already doesn't exist
+      // we still need to delete the data directory
+      changed = metadataProvider.delete(namespace, name);
+    } catch (DatasetException ex) {
+      throw new DatasetRepositoryException(
+          "Failed to delete descriptor for name:" + name, ex);
+    }
 
-    Path dataLocation = new Path(descriptor.getLocation());
-    FileSystem dataFS = fsForPath(dataLocation, conf);
+    final Path dataLocation = new Path(descriptor.getLocation());
+    final FileSystem fs = fsForPath(dataLocation, conf);
 
-    if (fs.getUri().equals(dataFS.getUri())) {
-      // the data location is on the right FS, so cleanlyDelete will work
-      changed |= FileSystemUtil.cleanlyDelete(fs, rootDirectory, dataLocation);
-    } else {
-      try {
-        if (dataFS.exists(dataLocation)) {
-          if (dataFS.delete(dataLocation, true)) {
-            changed = true;
-          } else {
-            throw new IOException(
-                "Failed to delete dataset name:" + name +
-                " location:" + dataLocation);
-          }
+    try {
+      if (fs.exists(dataLocation)) {
+        if (fs.delete(dataLocation, true)) {
+          changed = true;
+        } else {
+          throw new DatasetRepositoryException(
+              "Failed to delete dataset name:" + name +
+              " location:" + dataLocation);
         }
-      } catch (IOException e) {
-        throw new DatasetIOException(
-            "Internal failure when removing location:" + dataLocation, e);
       }
+    } catch (IOException e) {
+      throw new DatasetRepositoryException(
+          "Internal failure when removing location:" + dataLocation);
     }
     return changed;
   }
@@ -392,7 +426,7 @@ public class FileSystemDatasetRepository extends AbstractDatasetRepository
     try {
       return dataPath.getFileSystem(conf);
     } catch (IOException ex) {
-      throw new DatasetIOException(
+      throw new DatasetRepositoryException(
           "Cannot get FileSystem for descriptor", ex);
     }
   }

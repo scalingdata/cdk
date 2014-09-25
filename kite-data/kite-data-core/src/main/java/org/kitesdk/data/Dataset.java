@@ -40,6 +40,7 @@ import org.kitesdk.data.spi.PartitionKey;
  * @param <E> The type of entities stored in this {@code Dataset}.
  *
  * @see View
+ * @see DatasetRepository
  * @see DatasetWriter
  * @see DatasetReader
  * @see PartitionStrategy

@@ -22,7 +22,8 @@ import javax.annotation.concurrent.Immutable;
 
 /**
  * <p>
- * The data format used for encoding the data in a {@link Dataset}.
+ * The data format used for encoding the data in a {@link Dataset} when stored 
+ * in a {@link DatasetRepository}.
  * </p>
  * <p>
  * There are a small number of formats provided. The default is

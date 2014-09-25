@@ -21,8 +21,10 @@ import java.util.Iterator;
 import java.util.Set;
 import org.apache.hadoop.mapreduce.InputFormat;
 import org.kitesdk.data.DatasetDescriptor;
+import org.kitesdk.data.DatasetException;
 import org.kitesdk.data.DatasetIOException;
 import org.kitesdk.data.spi.Compatibility;
+import org.kitesdk.data.DatasetRepositoryException;
 import org.kitesdk.data.spi.PartitionKey;
 import org.kitesdk.data.PartitionStrategy;
 import org.kitesdk.data.RefinableView;
@@ -207,7 +209,7 @@ public class FileSystemDataset<E> extends AbstractDataset<E> implements
         }
       }
     } catch (IOException e) {
-      throw new DatasetIOException("Unable to locate or create dataset partition directory " + partitionDirectory, e);
+      throw new DatasetException("Unable to locate or create dataset partition directory " + partitionDirectory, e);
     }
 
     int partitionDepth = key.getLength();
@@ -235,7 +237,7 @@ public class FileSystemDataset<E> extends AbstractDataset<E> implements
     Preconditions.checkState(descriptor.isPartitioned(),
       "Attempt to drop a partition on a non-partitioned dataset (name:%s)",
       name);
-    Preconditions.checkNotNull(key, "Partition key may not be null");
+    Preconditions.checkArgument(key != null, "Partition key may not be null");
 
     LOG.debug("Dropping partition with key:{} dataset:{}", key, name);
 
@@ -243,11 +245,11 @@ public class FileSystemDataset<E> extends AbstractDataset<E> implements
 
     try {
       if (!fileSystem.delete(partitionDirectory, true)) {
-        throw new IOException("Partition directory " + partitionDirectory
+        throw new DatasetException("Partition directory " + partitionDirectory
           + " for key " + key + " does not exist");
       }
     } catch (IOException e) {
-      throw new DatasetIOException("Unable to locate or drop dataset partition directory " + partitionDirectory, e);
+      throw new DatasetException("Unable to locate or drop dataset partition directory " + partitionDirectory, e);
     }
   }
 
@@ -266,7 +268,7 @@ public class FileSystemDataset<E> extends AbstractDataset<E> implements
       fileStatuses = fileSystem.listStatus(directory,
         PathFilters.notHidden());
     } catch (IOException e) {
-      throw new DatasetIOException("Unable to list partition directory for directory " + directory, e);
+      throw new DatasetException("Unable to list partition directory for directory " + directory, e);
     }
 
     for (FileStatus stat : fileStatuses) {
@@ -326,7 +328,7 @@ public class FileSystemDataset<E> extends AbstractDataset<E> implements
         LOG.debug("Renaming {} to {}", path, newPath);
         boolean renameOk = fileSystem.rename(path, newPath);
         if (!renameOk) {
-          throw new IOException("Dataset merge failed during rename of " + path +
+          throw new DatasetException("Dataset merge failed during rename of " + path +
               " to " + newPath);
         }
       } catch (IOException e) {
@@ -348,14 +350,14 @@ public class FileSystemDataset<E> extends AbstractDataset<E> implements
   }
 
   @SuppressWarnings("unchecked")
-  private Path toDirectoryName(@Nullable Path dir, PartitionKey key) {
+  private Path toDirectoryName(Path dir, PartitionKey key) {
     Path result = dir;
     for (int i = 0; i < key.getLength(); i++) {
       final FieldPartitioner fp = partitionStrategy.getFieldPartitioners().get(i);
       if (result != null) {
-        result = new Path(result, PathConversion.dirnameForValue(fp, key.get(i)));
+        result = new Path(result, convert.dirnameForValue(fp, key.get(i)));
       } else {
-        result = new Path(PathConversion.dirnameForValue(fp, key.get(i)));
+        result = new Path(convert.dirnameForValue(fp, key.get(i)));
       }
     }
     return result;
@@ -496,7 +498,7 @@ public class FileSystemDataset<E> extends AbstractDataset<E> implements
     }
 
     public Builder<E> type(Class<E> type) {
-      Preconditions.checkNotNull(type, "Type cannot be null");
+      Preconditions.checkArgument(type != null, "Type cannot be null");
 
       this.type = type;
 
@@ -533,7 +535,7 @@ public class FileSystemDataset<E> extends AbstractDataset<E> implements
         try {
           this.fileSystem = directory.getFileSystem(conf);
         } catch (IOException ex) {
-          throw new DatasetIOException("Cannot access FileSystem", ex);
+          throw new DatasetException("Cannot access FileSystem", ex);
         }
       }
 

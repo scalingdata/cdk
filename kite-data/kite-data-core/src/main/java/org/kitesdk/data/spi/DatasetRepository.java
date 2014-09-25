@@ -61,6 +61,7 @@ public interface DatasetRepository {
    * @param namespace A namespace, or logical group name, for the dataset.
    * @param name The name of the dataset.
    * @throws DatasetNotFoundException if there is no data set named {@code name}
+   * @throws DatasetRepositoryException
    *
    * @since 0.17.0
    */
@@ -74,6 +75,7 @@ public interface DatasetRepository {
    * @param name The name of the dataset.
    * @param type the Java type of entities in the dataset
    * @throws DatasetNotFoundException if there is no data set named {@code name}
+   * @throws DatasetRepositoryException
    *
    * @since 0.17.0
    */
@@ -175,6 +177,7 @@ public interface DatasetRepository {
    *                                    datasets with shared
    *                                    storage (for example, in the
    *                                    same HBase table).
+   * @throws DatasetRepositoryException
    *
    * @since 0.17.0
    */
@@ -211,6 +214,7 @@ public interface DatasetRepository {
    *                                    datasets with shared
    *                                    storage (for example, in the
    *                                    same HBase table).
+   * @throws DatasetRepositoryException
    *
    * @since 0.17.0
    */
@@ -234,6 +238,7 @@ public interface DatasetRepository {
    * @throws ConcurrentSchemaModificationException
    *                                  if the {@code Dataset}
    *                                  schema is updated concurrently.
+   * @throws DatasetRepositoryException
    *
    * @since 0.17.0
    */
@@ -246,6 +251,7 @@ public interface DatasetRepository {
    * @param name a {@code Dataset} name to check the existence of
    * @return true if a Dataset named {@code name} exists, false otherwise
    * @throws IllegalArgumentException if {@code name} is null
+   * @throws DatasetRepositoryException
    *
    * @since 0.17.0
    */
@@ -269,6 +275,7 @@ public interface DatasetRepository {
    *
    * @param namespace A namespace, or logical group name, for the dataset.
    * @return a {@link Collection} of Dataset names ({@link String}s)
+   * @throws DatasetRepositoryException
    *
    * @since 0.17.0
    */
@@ -276,9 +283,8 @@ public interface DatasetRepository {
 
   /**
    * Return the {@link URI} of this repository. When used with the {@link
-   * org.kitesdk.data.spi.DatasetRepositories#repositoryFor(java.net.URI)}
-   * method, an equivalent {@code DatasetRepository} object to {@code this} is
-   * returned.
+   * Datasets#repositoryFor(java.net.URI)} method, an equivalent 
+   * {@code DatasetRepository} object to {@code this} is returned.
    *
    * @return the {@link URI} of this repository
    *

@@ -16,16 +16,6 @@
 package org.kitesdk.data.spi.filesystem;
 
 import com.google.common.collect.Lists;
-import org.kitesdk.data.Dataset;
-import org.kitesdk.data.DatasetDescriptor;
-import org.kitesdk.data.DatasetException;
-import org.kitesdk.data.DatasetReader;
-import org.kitesdk.data.Format;
-import org.kitesdk.data.Formats;
-import org.kitesdk.data.MiniDFSTest;
-import org.kitesdk.data.ValidationException;
-import org.kitesdk.data.spi.PartitionKey;
-import org.kitesdk.data.PartitionStrategy;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import java.io.IOException;
@@ -44,13 +34,26 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.kitesdk.data.CompressionType;
+import org.kitesdk.data.Dataset;
+import org.kitesdk.data.DatasetDescriptor;
+import org.kitesdk.data.DatasetException;
+import org.kitesdk.data.DatasetReader;
+import org.kitesdk.data.DatasetRepositoryException;
+import org.kitesdk.data.Format;
+import org.kitesdk.data.Formats;
+import org.kitesdk.data.IncompatibleSchemaException;
+import org.kitesdk.data.MiniDFSTest;
+import org.kitesdk.data.PartitionStrategy;
 import org.kitesdk.data.TestHelpers;
+import org.kitesdk.data.ValidationException;
+import org.kitesdk.data.spi.FieldPartitioner;
+import org.kitesdk.data.spi.PartitionKey;
 import org.kitesdk.data.spi.PartitionedDataset;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.kitesdk.data.spi.filesystem.DatasetTestUtilities.*;
-import org.kitesdk.data.spi.FieldPartitioner;
+import org.kitesdk.data.spi.filesystem.DatasetTestUtilities.RecordValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith(Parameterized.class)
 public class TestFileSystemDataset extends MiniDFSTest {
@@ -429,7 +432,7 @@ public class TestFileSystemDataset extends MiniDFSTest {
     ds.merge(dsUpdate);
   }
 
-  @Test(expected = ValidationException.class)
+  @Test(expected = IncompatibleSchemaException.class)
   public void testCannotMergeDatasetsWithDifferentSchemas() throws IOException {
     FileSystemDataset<Record> ds = new FileSystemDataset.Builder<Record>()
         .namespace("ns")

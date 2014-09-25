@@ -24,9 +24,9 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.kitesdk.data.DatasetIOException;
-import org.kitesdk.data.DatasetOperationException;
-import org.kitesdk.data.spi.DatasetRepository;
 import org.kitesdk.data.spi.DefaultConfiguration;
+import org.kitesdk.data.spi.DatasetRepository;
+import org.kitesdk.data.DatasetRepositoryException;
 import org.kitesdk.data.spi.Loadable;
 import org.kitesdk.data.spi.OptionBuilder;
 import org.kitesdk.data.spi.Registration;
@@ -65,7 +65,8 @@ public class Loader implements Loadable {
       try {
         fs = FileSystem.get(fileSystemURI(match), conf);
       } catch (IOException ex) {
-        throw new DatasetIOException("Could not get a FileSystem", ex);
+        throw new DatasetRepositoryException(
+            "Could not get a FileSystem", ex);
       }
       return new FileSystemDatasetRepository.Builder()
           .configuration(new Configuration(conf)) // make a modifiable copy
@@ -133,7 +134,7 @@ public class Loader implements Loadable {
       return new URI(match.get(URIPattern.SCHEME), userInfo,
           match.get(URIPattern.HOST), port, "/", null, null);
     } catch (URISyntaxException ex) {
-      throw new DatasetOperationException("[BUG] Could not build FS URI", ex);
+      throw new DatasetRepositoryException("Could not build FS URI", ex);
     }
   }
 }

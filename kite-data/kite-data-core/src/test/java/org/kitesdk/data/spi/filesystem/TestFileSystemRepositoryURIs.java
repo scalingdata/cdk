@@ -15,7 +15,7 @@
  */
 package org.kitesdk.data.spi.filesystem;
 
-import org.kitesdk.data.DatasetIOException;
+import org.kitesdk.data.DatasetRepositoryException;
 import org.kitesdk.data.MiniDFSTest;
 import org.kitesdk.data.spi.DatasetRepository;
 import org.kitesdk.data.spi.MetadataProvider;
@@ -28,6 +28,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import org.apache.hadoop.fs.LocalFileSystem;
 import org.junit.BeforeClass;
+import org.kitesdk.data.Datasets;
 import org.kitesdk.data.spi.DatasetRepositories;
 
 public class TestFileSystemRepositoryURIs extends MiniDFSTest {
@@ -75,7 +76,7 @@ public class TestFileSystemRepositoryURIs extends MiniDFSTest {
     Assert.assertEquals("Repository URI", repositoryUri, repository.getUri());
   }
 
-  @Test(expected = DatasetIOException.class)
+  @Test(expected = DatasetRepositoryException.class)
   public void testHdfsFailsDefault() {
     // the environment doesn't contain the HDFS URI, so this should cause a
     // DatasetRepository exception about not finding HDFS

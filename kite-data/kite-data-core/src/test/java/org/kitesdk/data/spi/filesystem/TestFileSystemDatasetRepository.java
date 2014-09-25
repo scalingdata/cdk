@@ -28,10 +28,12 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.junit.Assert;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.kitesdk.data.Dataset;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.DatasetReader;
+import org.kitesdk.data.DatasetRepositoryException;
 import org.kitesdk.data.DatasetWriter;
 import org.kitesdk.data.Formats;
 import org.kitesdk.data.PartitionStrategy;
@@ -40,8 +42,10 @@ import org.kitesdk.data.TestHelpers;
 import org.kitesdk.data.ValidationException;
 import org.kitesdk.data.spi.DatasetRepository;
 import org.kitesdk.data.spi.MetadataProvider;
+import static org.kitesdk.data.spi.filesystem.DatasetTestUtilities.checkTestUsers;
 
 import static org.kitesdk.data.spi.filesystem.DatasetTestUtilities.checkTestUsers;
+import static org.kitesdk.data.spi.filesystem.DatasetTestUtilities.writeTestUsers;
 import static org.kitesdk.data.spi.filesystem.DatasetTestUtilities.writeTestUsers;
 
 public class TestFileSystemDatasetRepository extends TestDatasetRepositories {
