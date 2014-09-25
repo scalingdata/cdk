@@ -140,7 +140,7 @@
     <vers.commons-io>2.1</vers.commons-io>
     <vers.commons-logging>1.1.1</vers.commons-logging>
     <vers.commons-lang>2.5</vers.commons-lang>
-    <vers.crunch-base>0.10.0</vers.crunch-base>
+    <vers.crunch-base>0.11.0</vers.crunch-base>
     <vers.crunch>${cdh.crunch.version}</vers.crunch>
     <vers.crunch-cdh5>${cdh.crunch.version}</vers.crunch-cdh5>
     <vers.findbugs.jsr305>2.0.1</vers.findbugs.jsr305>
@@ -179,7 +179,7 @@
     <vers.opencsv>2.3</vers.opencsv>
     <vers.jodatime>2.3</vers.jodatime>
     <vers.jcommander>1.35</vers.jcommander>
-    <vers.spark>1.0.0</vers.spark>
+    <vers.spark>${cdh.spark.version}</vers.spark>
 
     <!-- Plugin versions -->
     <vers.doxia-module-markdown>1.4</vers.doxia-module-markdown>
