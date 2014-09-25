@@ -38,7 +38,6 @@ import org.kitesdk.data.View;
 import org.kitesdk.data.spi.InputFormatAccessor;
 import org.kitesdk.data.spi.PartitionKey;
 import org.kitesdk.data.spi.PartitionedDataset;
-import org.kitesdk.data.spi.URIBuilder;
 import org.kitesdk.data.spi.filesystem.FileSystemDataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -268,7 +267,7 @@ public class DatasetKeyInputFormat<E> extends InputFormat<E, Void>
     String inputUri = conf.get(KITE_INPUT_URI);
     if (inputUri == null) {
       return Datasets.<E, View<E>>load(
-          new URIBuilder(
+          new org.kitesdk.data.spi.URIBuilder(
               conf.get(KITE_REPOSITORY_URI), conf.get(KITE_DATASET_NAME))
               .build(), type);
     }

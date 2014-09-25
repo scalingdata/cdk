@@ -46,7 +46,6 @@ import org.kitesdk.data.spi.Mergeable;
 import org.kitesdk.data.spi.PartitionKey;
 import org.kitesdk.data.spi.TemporaryDatasetRepository;
 import org.kitesdk.data.spi.TemporaryDatasetRepositoryAccessor;
-import org.kitesdk.data.spi.URIBuilder;
 import org.kitesdk.data.spi.filesystem.FileSystemDataset;
 import org.kitesdk.data.spi.filesystem.FileSystemProperties;
 
@@ -541,7 +540,7 @@ public class DatasetKeyOutputFormat<E> extends OutputFormat<E, Void> {
     String outputUri = conf.get(KITE_OUTPUT_URI);
     if (outputUri == null) {
       return Datasets.<E, View<E>>load(
-          new URIBuilder(
+          new org.kitesdk.data.spi.URIBuilder(
               conf.get(KITE_REPOSITORY_URI), conf.get(KITE_DATASET_NAME))
               .build(), type);
     }
