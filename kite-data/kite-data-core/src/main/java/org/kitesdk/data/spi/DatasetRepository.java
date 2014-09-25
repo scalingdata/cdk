@@ -68,6 +68,11 @@ public interface DatasetRepository {
   <E> Dataset<E> load(String namespace, String name);
 
   /**
+   * Added for compatability with 0.15
+   */
+  <E> Dataset<E> load(String name);
+
+  /**
    * Get the latest version of a named {@link Dataset}. If no dataset with the
    * provided {@code name} exists, a {@link DatasetNotFoundException} is thrown.
    *
@@ -82,6 +87,10 @@ public interface DatasetRepository {
   <E> Dataset<E> load(String namespace, String name, Class<E> type);
 
   /**
+   * Added for compatability with 0.15
+   */
+  <E> Dataset<E> load(String name, Class<E> type);
+
   /**
    * Create a {@link Dataset} with the supplied {@code descriptor}. Depending on
    * the underlying dataset storage, some schema types or configurations might
@@ -115,6 +124,11 @@ public interface DatasetRepository {
   <E> Dataset<E> create(String namespace, String name, DatasetDescriptor descriptor);
 
   /**
+   * Added for compatability with 0.15
+   */
+  <E> Dataset<E> create(String name, DatasetDescriptor descriptor);
+
+  /**
    * Create a {@link Dataset} with the supplied {@code descriptor}. Depending on
    * the underlying dataset storage, some schema types or configurations might
    * not be supported. If you supply an illegal schema, the implementing class
@@ -146,6 +160,11 @@ public interface DatasetRepository {
    * @since 0.17.0
    */
   <E> Dataset<E> create(String namespace, String name, DatasetDescriptor descriptor, Class<E> type);
+
+  /**
+   * Added for compatability with 0.15
+   */
+  <E> Dataset<E> create(String name, DatasetDescriptor descriptor, Class<E> type);
 
   /**
    * Update an existing {@link Dataset} to reflect the supplied
@@ -182,6 +201,11 @@ public interface DatasetRepository {
    * @since 0.17.0
    */
   <E> Dataset<E> update(String namespace, String name, DatasetDescriptor descriptor);
+
+  /**
+   * Added for compatability with 0.15
+   */
+  <E> Dataset<E> update(String name, DatasetDescriptor descriptor);
 
   /**
    * Update an existing {@link Dataset} to reflect the supplied
@@ -221,6 +245,11 @@ public interface DatasetRepository {
   <E> Dataset<E> update(String namespace, String name, DatasetDescriptor descriptor, Class<E> type);
 
   /**
+   * Added for compatability with 0.15
+   */
+  <E> Dataset<E> update(String name, DatasetDescriptor descriptor, Class<E> type);
+
+  /**
    * Delete data for the {@link Dataset} named {@code name} and remove its
    * {@link DatasetDescriptor} from the underlying metadata provider.
    *
@@ -245,6 +274,11 @@ public interface DatasetRepository {
   boolean delete(String namespace, String name);
 
   /**
+   * Added for compatability with 0.15
+   */
+  boolean delete(String name);
+
+  /**
    * Checks if there is a {@link Dataset} in this repository named {@code name}.
    *
    * @param namespace A namespace, or logical group name, for the dataset.
@@ -256,6 +290,11 @@ public interface DatasetRepository {
    * @since 0.17.0
    */
   boolean exists(String namespace, String name);
+
+  /**
+   * Added for compatability with 0.15
+   */
+  boolean exists(String name);
 
   /**
    * List the names of the {@link Dataset} namespaces, or logical groups, in

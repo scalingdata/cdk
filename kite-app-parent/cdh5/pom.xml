@@ -69,13 +69,13 @@
   <properties>
     <!-- dependency version properties -->
     <kite.version>0.15.0-cdh5.2.0-SNAPSHOT</kite.version>
-    <kite.avro.version>1.7.6-cdh5.2.0</kite.avro.version>
-    <kite.crunch.version>0.10.0-cdh5.2.0</kite.crunch.version>
+    <kite.avro.version>1.7.6-cdh5.2.0-SNAPSHOT</kite.avro.version>
+    <kite.crunch.version>0.10.0-cdh5.2.0-SNAPSHOT</kite.crunch.version>
     <kite.findbugs.version>2.0.1</kite.findbugs.version>
-    <kite.hive.version>0.13.1-cdh5.2.0</kite.hive.version>
-    <kite.oozie.version>4.0.0-cdh5.2.0</kite.oozie.version>
-    <kite.spark.version>1.0.0-cdh5.2.0</kite.spark.version>
-    <kite.parquet.version>1.5.0-cdh5.2.0</kite.parquet.version>
+    <kite.hive.version>0.13.1-cdh5.2.0-SNAPSHOT</kite.hive.version>
+    <kite.oozie.version>4.0.0-cdh5.2.0-SNAPSHOT</kite.oozie.version>
+    <kite.spark.version>1.0.0-cdh5.2.0-SNAPSHOT</kite.spark.version>
+    <kite.parquet.version>1.5.0-cdh5.2.0-SNAPSHOT</kite.parquet.version>
 
     <!-- other properties to help apps -->
     <hadoop.guava.version>11.0.2</hadoop.guava.version>

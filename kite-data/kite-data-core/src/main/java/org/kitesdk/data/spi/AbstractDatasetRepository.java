@@ -35,10 +35,30 @@ public abstract class AbstractDatasetRepository implements DatasetRepository {
     return (Dataset<E>) create(namespace, name, descriptor, Object.class);
   }
 
+  @Override
+  public <E> Dataset<E> create(String name, DatasetDescriptor descriptor) {
+    return (Dataset<E>) create(URIBuilder.NAMESPACE_DEFAULT, name, descriptor);
+  }
+
+  @Override
+  public <E> Dataset<E> create(String name, DatasetDescriptor descriptor, Class<E> type) {
+    return create(URIBuilder.NAMESPACE_DEFAULT, name, descriptor, type);
+  }
+
   @SuppressWarnings("unchecked")
   @Override
   public <E> Dataset<E> load(String namespace, String name) {
     return (Dataset<E>) load(namespace, name, Object.class);
+  }
+
+  @Override
+  public <E> Dataset<E> load(String name) {
+    return (Dataset<E>) load(URIBuilder.NAMESPACE_DEFAULT, name);
+  }
+
+  @Override
+  public <E> Dataset<E> load(String name, Class<E> type) {
+    return load(URIBuilder.NAMESPACE_DEFAULT, name, type);
   }
 
   @SuppressWarnings("unchecked")
@@ -46,4 +66,25 @@ public abstract class AbstractDatasetRepository implements DatasetRepository {
   public <E> Dataset<E> update(String namespace, String name, DatasetDescriptor descriptor) {
     return (Dataset<E>) update(namespace, name, descriptor, Object.class);
   }
+
+  @Override
+  public <E> Dataset<E> update(String name, DatasetDescriptor descriptor) {
+    return (Dataset<E>) update(URIBuilder.NAMESPACE_DEFAULT, name, descriptor);
+  }
+
+  @Override
+  public <E> Dataset<E> update(String name, DatasetDescriptor descriptor, Class<E> type) {
+    return update(URIBuilder.NAMESPACE_DEFAULT, name, descriptor, type);
+  }
+
+  @Override
+  public boolean delete(String name) {
+    return delete(URIBuilder.NAMESPACE_DEFAULT, name);
+  }
+
+  @Override
+  public boolean exists(String name) {
+    return exists(URIBuilder.NAMESPACE_DEFAULT, name);
+  }
+
 }
