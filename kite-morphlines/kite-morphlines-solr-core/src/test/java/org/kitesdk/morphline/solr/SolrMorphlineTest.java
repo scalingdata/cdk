@@ -200,11 +200,13 @@ public class SolrMorphlineTest extends AbstractSolrMorphlineTest {
     assertEquals(6, collector.getRecords().size());
     
     record.replaceValues(Fields.ID, "id:id2*");
+    record.put(Fields.ID, "text:NonExistent");
     record.replaceValues(LoadSolrBuilder.LOAD_SOLR_TYPE, "deleteByQuery");
     assertTrue(morphline.process(record.copy()));
     assertEquals(7, collector.getRecords().size());
     
     record.replaceValues(Fields.ID, "id:NonExistent*");
+    record.put(Fields.ID, "text:NonExistent*");
     record.replaceValues(LoadSolrBuilder.LOAD_SOLR_TYPE, "deleteByQuery");
     assertTrue(morphline.process(record.copy()));
     assertEquals(8, collector.getRecords().size());
