@@ -219,6 +219,22 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>cloudera-central</id>
+      <name>libs-release</name>
+      <url>https://repository.cloudera.com/artifactory/libs-release</url>
+    </repository>
+    <repository>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>cloudera-snapshots</id>
+      <name>libs-snapshot</name>
+      <url>https://repository.cloudera.com/artifactory/libs-snapshot</url>
+    </repository>
   </repositories>
 
   <build>
