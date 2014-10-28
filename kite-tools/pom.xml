@@ -117,6 +117,7 @@
                   <include>org.javassist:javassist</include>
                   <include>com.google.code.findbugs:jsr305</include>
                   <include>com.google.code.findbugs:annotations</include>
+                  <include>org.apache.avro:avro-mapred</include>
                 </includes>
                 <!-- <excludes>
                   <exclude>*:*</exclude>
@@ -327,6 +328,21 @@
       <scope>compile</scope>
     </dependency>
 
+    <!-- Include Avro -->
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro-mapred</artifactId>
+      <scope>compile</scope>
+      <classifier>hadoop2</classifier>
+      <version>${vers.avro}</version>
+    </dependency>
+
     <!-- Hadoop-provided dependencies (not bundled) -->
 
     <dependency>
@@ -341,13 +357,6 @@
       <groupId>org.kitesdk</groupId>
       <artifactId>${artifact.hbase-deps}</artifactId>
       <type>pom</type>
-      <scope>provided</scope>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.avro</groupId>
-      <artifactId>avro</artifactId>
       <scope>provided</scope>
       <optional>true</optional>
     </dependency>
