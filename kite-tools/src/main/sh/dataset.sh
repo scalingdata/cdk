@@ -56,12 +56,9 @@ if [ -z "${HADOOP_HOME}" ]; then
 fi
 
 if [ -z "${HADOOP_MAPRED_HOME}" ]; then
-  HADOP_MAPRED_HOME=/usr/lib/hadoop-0.20-mapreduce
+  HADOP_MAPRED_HOME=/usr/lib/hadoop-mapreduce
   if [ ! -d "${HADOOP_MAPRED_HOME}" ]; then
-    HADOOP_MAPRED_HOME=${HADOOP_COMMON_HOME}/../hadoop-0.20-mapreduce
-    if [ ! -d "${HADOOP_MAPRED_HOME}" ]; then
-      HADOOP_MAPRED_HOME=${HADOOP_COMMON_HOME}/../hadoop-mapreduce
-    fi
+    HADOOP_MAPRED_HOME=${HADOOP_COMMON_HOME}/../hadoop-mapreduce
   fi
 fi
 debug "Using HADOOP_MAPRED_HOME=${HADOOP_MAPRED_HOME}"
