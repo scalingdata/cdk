@@ -95,7 +95,7 @@ public class Constraints implements Serializable{
                       String name, Predicate predicate) {
     this.schema = schema;
     this.strategy = strategy;
-    Map<String, Predicate> copy = Maps.newHashMap(constraints);
+    Map<String, Predicate> copy = Maps.newLinkedHashMap(constraints);
     copy.put(name, predicate);
     this.constraints = ImmutableMap.copyOf(copy);
   }
