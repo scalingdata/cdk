@@ -24,6 +24,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
@@ -35,6 +37,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -183,6 +186,16 @@ public class Constraints implements Serializable{
   }
 
   /**
+   * Filter the entities returned by a given iterator by these constraints.
+   *
+   * @param <E> The type of entities to be matched
+   * @return an iterator filtered by these constraints
+   */
+  public <E> Iterator<E> filter(Iterator<E> iterator, EntityAccessor<E> accessor) {
+    return Iterators.filter(iterator, toEntityPredicate(accessor));
+  }
+
+  /**
    * Get a {@link Predicate} that tests {@link StorageKey} objects.
    *
    * If a {@code StorageKey} matches the predicate, it <em>may</em> represent a
@@ -193,7 +206,7 @@ public class Constraints implements Serializable{
    * @return a Predicate for testing StorageKey objects
    * @throws NullPointerException if no partition strategy is defined
    */
-  public Predicate<StorageKey> toKeyPredicate() {
+  public KeyPredicate toKeyPredicate() {
     Preconditions.checkNotNull(strategy,
         "Cannot produce a key predicate without a partition strategy");
     return new KeyPredicate(constraints, strategy);
@@ -643,7 +656,7 @@ public class Constraints implements Serializable{
    * A {@link Predicate} for testing a {@link StorageKey} against a set of
    * predicates.
    */
-  private static class KeyPredicate implements Predicate<StorageKey> {
+  public static class KeyPredicate implements Predicate<StorageKey> {
     private final List<Predicate> partitionPredicates;
     private final List<Predicate<Marker>> timePredicates;
 
