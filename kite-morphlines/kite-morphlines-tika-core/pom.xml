@@ -18,7 +18,7 @@
   <parent>
     <groupId>org.kitesdk</groupId>
     <artifactId>kite-morphlines</artifactId>
-    <version>0.15.0-cdh5.3.0</version>
+    <version>0.15.0-cdh5.3.1</version>
   </parent>
 
   <artifactId>kite-morphlines-tika-core</artifactId>
