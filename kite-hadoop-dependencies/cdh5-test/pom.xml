@@ -19,12 +19,12 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>kite-hadoop-cdh5-test-dependencies</artifactId>
   <packaging>pom</packaging>
-  <version>1.0.0</version>
+  <version>1.0.0-cdh5.4.0-SNAPSHOT</version>
 
   <parent>
     <groupId>org.kitesdk</groupId>
     <artifactId>kite-hadoop-deps-parent</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-cdh5.4.0-SNAPSHOT</version>
   </parent>
 
   <name>Kite Hadoop CDH5 Test Dependencies Module</name>
@@ -36,7 +36,7 @@
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-common</artifactId>
-      <version>${vers.hadoop-cdh5}</version>
+      <version>${vers.hadoop}</version>
       <type>test-jar</type>
       <exclusions>
         <!-- brings in earlier version of org.apache.httpcomponents:httpclient that doesn't work with webhdfs -->
@@ -49,13 +49,13 @@
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-hdfs</artifactId>
-      <version>${vers.hadoop-cdh5}</version>
+      <version>${vers.hadoop}</version>
       <type>test-jar</type>
     </dependency>
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-minicluster</artifactId>
-      <version>${vers.hadoop-cdh5}</version>
+      <version>${vers.hadoop}</version>
     </dependency>
   </dependencies>
 

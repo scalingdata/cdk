@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.kitesdk</groupId>
     <artifactId>kite-tools-parent</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-cdh5.4.0-SNAPSHOT</version>
     <relativePath>../</relativePath>
   </parent>
 
@@ -136,14 +136,14 @@
     <dependency>
       <groupId>org.apache.hive</groupId>
       <artifactId>hive-exec</artifactId>
-      <version>${vers.hive-cdh5}</version>
+      <version>${vers.hive}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.hive</groupId>
       <artifactId>hive-serde</artifactId>
-      <version>${vers.hive-cdh5}</version>
+      <version>${vers.hive}</version>
       <scope>provided</scope>
     </dependency>
 

@@ -15,14 +15,11 @@
   <parent>
     <groupId>org.kitesdk</groupId>
     <artifactId>kite-parent</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-cdh5.4.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <properties>
-    <!-- TODO move to parent POM when building for multiple profiles -->
-    <vers.hive-cdh5>0.12.0-cdh${cdh5.version}</vers.hive-cdh5>
-    <vers.flume-cdh5>1.4.0-cdh${cdh5.version}</vers.flume-cdh5>
   </properties>
 
   <build>
@@ -139,6 +136,7 @@
       <groupId>org.kitesdk</groupId>
       <artifactId>kite-hadoop-cdh5-test-dependencies</artifactId>
       <version>${project.version}</version>
+      <scope>compile</scope>
       <type>pom</type>
     </dependency>
 
@@ -146,43 +144,44 @@
       <groupId>org.kitesdk</groupId>
       <artifactId>kite-hbase-cdh5-test-dependencies</artifactId>
       <version>${project.version}</version>
+      <scope>compile</scope>
       <type>pom</type>
     </dependency>
 
     <dependency>
       <groupId>org.apache.hive</groupId>
       <artifactId>hive-metastore</artifactId>
-      <version>${vers.hive-cdh5}</version>
+      <version>${vers.hive}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.hive</groupId>
       <artifactId>hive-common</artifactId>
-      <version>${vers.hive-cdh5}</version>
+      <version>${vers.hive}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.hive</groupId>
       <artifactId>hive-serde</artifactId>
-      <version>${vers.hive-cdh5}</version>
+      <version>${vers.hive}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.hive</groupId>
       <artifactId>hive-exec</artifactId>
-      <version>${vers.hive-cdh5}</version>
+      <version>${vers.hive}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.hive</groupId>
       <artifactId>hive-service</artifactId>
-      <version>${vers.hive-cdh5}</version>
+      <version>${vers.hive}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.flume</groupId>
       <artifactId>flume-ng-node</artifactId>
-      <version>${vers.flume-cdh5}</version>
+      <version>${vers.flume}</version>
       <exclusions>
         <exclusion>
           <groupId>org.mortbay.jetty</groupId>
@@ -191,13 +190,10 @@
       </exclusions>
     </dependency>
 
-    <!-- TODO: use the following instead of bundling the DatasetSink classes
-         directly when FLUME-2469 is released -->
-    <!--
     <dependency>
       <groupId>org.apache.flume.flume-ng-sinks</groupId>
       <artifactId>flume-dataset-sink</artifactId>
-      <version>${vers.flume-cdh5}</version>
+      <version>${vers.flume}</version>
       <exclusions>
         <exclusion>
           <groupId>org.kitesdk</groupId>
@@ -213,7 +209,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-    -->
 
     <dependency>
       <groupId>org.kitesdk</groupId>
