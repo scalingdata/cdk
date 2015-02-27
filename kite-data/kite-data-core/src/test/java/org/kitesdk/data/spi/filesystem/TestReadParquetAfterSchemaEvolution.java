@@ -17,24 +17,23 @@
 package org.kitesdk.data.spi.filesystem;
 
 import com.google.common.io.Files;
-import java.io.IOException;
-
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.LocalFileSystem;
 import org.apache.hadoop.fs.Path;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.kitesdk.data.Dataset;
-import org.kitesdk.data.DatasetDescriptor;
-import org.kitesdk.data.DatasetReader;
-import org.kitesdk.data.DatasetWriter;
-import org.kitesdk.data.TestDatasetReaders;
+import org.kitesdk.data.*;
+import org.kitesdk.data.event.Value;
+import org.kitesdk.data.spi.DefaultConfiguration;
 import org.kitesdk.data.spi.filesystem.DatasetTestUtilities.RecordValidator;
 
-public class TestWriteReflectReadGeneric extends TestDatasetReaders<GenericRecord> {
+import java.io.IOException;
+
+public class TestReadParquetAfterSchemaEvolution extends TestDatasetReaders<GenericRecord> {
 
   private static final int totalRecords = 100;
   protected static FileSystem fs = null;
@@ -46,15 +45,24 @@ public class TestWriteReflectReadGeneric extends TestDatasetReaders<GenericRecor
     Configuration conf = new Configuration();
     fs = FileSystem.getLocal(conf);
     testDirectory = new Path(Files.createTempDir().getAbsolutePath());
-    FileSystemDatasetRepository repo = new FileSystemDatasetRepository(conf, testDirectory);
-    Dataset<MyRecord> writerDataset = repo.create("ns", "test", new DatasetDescriptor.Builder()
-                                   .schema(MyRecord.class)
-                                   .build(), MyRecord.class);
-    DatasetWriter<MyRecord> writer = writerDataset.newWriter();
-    for (int i = 0; i < totalRecords; i++) {
-      writer.write(new MyRecord(String.valueOf(i), i));
+    FileSystemDatasetRepository repo = new FileSystemDatasetRepository(conf,
+        testDirectory);
+    Dataset<GenericRecord> writerDataset = repo.create("ns", "test", new DatasetDescriptor.Builder()
+                                   .schema(DatasetTestUtilities.OLD_VALUE_SCHEMA)
+                                   .format(Formats.PARQUET)
+                                   .build(), GenericRecord.class);
+    
+    DatasetWriter<GenericRecord> writer = writerDataset.newWriter();
+    
+    GenericRecord record = new GenericData.Record(DatasetTestUtilities.OLD_VALUE_SCHEMA);
+    for (long i = 0; i < totalRecords; i++) {
+      record.put("value", Long.valueOf(i));
+      writer.write(record);
     }
     writer.close();
+    
+    repo.update("ns", "test", new DatasetDescriptor.Builder(writerDataset.getDescriptor())
+      .schema(Value.class).build());
 
     readerDataset = repo.load("ns", "test", GenericRecord.class);
   }
@@ -80,24 +88,9 @@ public class TestWriteReflectReadGeneric extends TestDatasetReaders<GenericRecor
 
       @Override
       public void validate(GenericRecord record, int recordNum) {
-        Assert.assertEquals(GenericData.Record.class, record.getClass());
-        Assert.assertEquals(String.valueOf(recordNum), record.get("text").toString());
-        Assert.assertEquals(recordNum, record.get("value"));
+        Assert.assertEquals(null, record.get("id"));
+        Assert.assertEquals(Long.valueOf(recordNum), record.get("value"));
       }
     };
-  }
-
-  public static class MyRecord {
-
-    private String text;
-    private int value;
-
-    public MyRecord() {
-    }
-
-    public MyRecord(String text, int value) {
-      this.text = text;
-      this.value = value;
-    }
   }
 }
