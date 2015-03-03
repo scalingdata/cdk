@@ -180,6 +180,7 @@
     <vers.jodatime>2.3</vers.jodatime>
     <vers.jcommander>1.35</vers.jcommander>
     <vers.spark>${cdh.spark.version}</vers.spark>
+    <vers.snappy>1.0.5.3</vers.snappy>
 
     <!-- Plugin versions -->
     <vers.doxia-module-markdown>1.4</vers.doxia-module-markdown>
@@ -1063,6 +1064,13 @@
         <groupId>org.twdata.maven</groupId>
         <artifactId>mojo-executor</artifactId>
         <version>${vers.mojo-executor}</version>
+      </dependency>
+
+      <!-- For building on Macs and to match ScalingData deps -->
+      <dependency>
+        <groupId>org.xerial.snappy</groupId>
+        <artifactId>snappy-java</artifactId>
+        <version>${vers.snappy}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
