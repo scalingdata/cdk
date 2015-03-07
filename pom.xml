@@ -1075,6 +1075,19 @@
     </dependencies>
   </dependencyManagement>
 
+  <distributionManagement>
+    <repository>
+      <id>com.scalingdata.releases</id>
+      <name>ScalingData Release Repository</name>
+      <url>http://repository.scalingdata.com/content/repositories/com.scalingdata.releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>com.scalingdata.snapshots</id>
+      <name>ScalingData Snapshots Repository</name>
+      <url>http://repository.scalingdata.com/content/repositories/com.scalingdata.snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <profiles>
 
     <profile>
