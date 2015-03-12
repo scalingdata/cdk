@@ -81,11 +81,11 @@
   </contributors> 
 
   <scm>
-    <connection>scm:git:git://github.com/kite-sdk/kite.git</connection>
-    <url>https://github.com/kite-sdk/kite</url>
-    <developerConnection>scm:git:git@github.com:kite-sdk/kite.git
+    <connection>scm:git:git://github.com/scalingdata/cdk.git</connection>
+    <url>https://github.com/scalingdata/cdk</url>
+    <developerConnection>scm:git:git@github.com:scalingdata/cdk.git
     </developerConnection>
-    <tag>release-1.0.0</tag>
+    <tag>master</tag>
   </scm>
 
   <issueManagement>
