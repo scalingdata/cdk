@@ -80,11 +80,11 @@
   </contributors> 
 
   <scm>
-    <connection>scm:git:git://github.com/kite-sdk/kite.git</connection>
-    <url>https://github.com/kite-sdk/kite</url>
-    <developerConnection>scm:git:git@github.com:kite-sdk/kite.git
+    <connection>scm:git:git://github.com/scalingdata/cdk.git</connection>
+    <url>https://github.com/scalingdata/cdk</url>
+    <developerConnection>scm:git:git@github.com:scalingdata/cdk.git
     </developerConnection>
-    <tag>release-0.15.0</tag>
+    <tag>cdh5-0.15.0_5.2.1_sd</tag>
   </scm>
 
   <issueManagement>
