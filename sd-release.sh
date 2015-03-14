@@ -27,7 +27,7 @@ ${MVN} ${MVN_FLAGS} \
 ${MVN} ${MVN_FLAGS} \
   deploy \
   scm:tag \
-    -Dtag=release-$KITE_RELEASE_VERSION
+    -Dtag=release-${KITE_RELEASE_VERSION}
 
 # Set the version to the next development version
 ${MVN} ${MVN_FLAGS} \
@@ -41,4 +41,4 @@ ${MVN} ${MVN_FLAGS} \
     -Dincludes=**/pom.xml \
     -Dexcludes=**/target/**/pom.xml \
   scm:checkin \
-    -Dmessage="SD-BUILD: Preparing for $KITE_DEVELOPMENT_VERSION development"
+    -Dmessage="SD-BUILD: Preparing for ${KITE_DEVELOPMENT_VERSION} development"
