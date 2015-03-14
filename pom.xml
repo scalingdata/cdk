@@ -80,7 +80,7 @@
   </contributors> 
 
   <scm>
-    <connection>scm:git:git://github.com/scalingdata/cdk.git</connection>
+    <connection>scm:git:git@github.com:scalingdata/cdk.git</connection>
     <url>https://github.com/scalingdata/cdk</url>
     <developerConnection>scm:git:git@github.com:scalingdata/cdk.git
     </developerConnection>
