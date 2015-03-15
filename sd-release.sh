@@ -4,6 +4,11 @@ set -x
 MVN=$(type -p mvn)
 MVN_FLAGS="-B"
 
+if [ -z "${KITE_RELEASE_VERSION}" ] || [ -z "${KITE_DEVELOPMENT_VERSION}" ]; then
+  echo "You must set KITE_RELEASE_VERSION and KITE_DEVELOPMENT_VERSION before running this script."
+  exit 1
+fi
+
 if [ -n "${WORKSPACE}" ]; then
   MVN_FLAGS="${MVN_FLAGS} -f ${WORKSPACE}/pom.xml"
   MVN_FLAGS="${MVN_FLAGS} -Dmaven.repo.local=${WORKSPACE}/.repository"
