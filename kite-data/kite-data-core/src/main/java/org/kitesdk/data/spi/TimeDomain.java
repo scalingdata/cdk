@@ -22,7 +22,7 @@ import com.google.common.base.Predicate;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.DiscreteDomains;
+import com.google.common.collect.DiscreteDomain;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.Arrays;
@@ -175,7 +175,7 @@ public class TimeDomain {
     private final boolean acceptEqual;
 
     private TimeRangePredicateImpl(Range<Long> timeRange, boolean acceptEqual) {
-      this.range = Ranges.adjustClosed(timeRange, DiscreteDomains.longs());
+      this.range = Ranges.adjustClosed(timeRange, DiscreteDomain.longs());
       this.acceptEqual = acceptEqual;
 
       int length = partitioners.size();

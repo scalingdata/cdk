@@ -249,6 +249,13 @@
       </exclusions>
     </dependency>
 
+    <dependency>
+      <groupId>org.kitesdk</groupId>
+      <artifactId>kite-test-shims</artifactId>
+      <scope>test</scope>
+      <version>0.15.0-cdh5.2.1-sd1.0.0-SNAPSHOT</version>
+    </dependency>
+
   </dependencies>
 
 </project>

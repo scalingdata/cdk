@@ -16,7 +16,7 @@
 package org.kitesdk.data.spi.partition;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.DiscreteDomains;
+import com.google.common.collect.DiscreteDomain;
 import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
@@ -78,7 +78,7 @@ public class IntRangeFieldPartitioner extends FieldPartitioner<Integer, Integer>
       //   if this( 5 ) => 10 then this( 6 ) => 10, so 10 must be included
       return Ranges.transformClosed(
           Ranges.adjustClosed((Range<Integer>) predicate,
-              DiscreteDomains.integers()), this);
+              DiscreteDomain.integers()), this);
     } else {
       return null;
     }
@@ -113,7 +113,7 @@ public class IntRangeFieldPartitioner extends FieldPartitioner<Integer, Integer>
 
     } else if (predicate instanceof Range) {
       Range<Integer> adjusted = Ranges.adjustClosed(
-          (Range<Integer>) predicate, DiscreteDomains.integers());
+          (Range<Integer>) predicate, DiscreteDomain.integers());
       if (adjusted.hasLowerBound()) {
         int lower = adjusted.lowerEndpoint();
         int lowerIndex = apply(lower);

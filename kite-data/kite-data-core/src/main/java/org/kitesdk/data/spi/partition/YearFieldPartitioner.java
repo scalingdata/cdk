@@ -16,7 +16,7 @@
 package org.kitesdk.data.spi.partition;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.DiscreteDomains;
+import com.google.common.collect.DiscreteDomain;
 import java.util.Calendar;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -51,7 +51,7 @@ public class YearFieldPartitioner extends CalendarFieldPartitioner {
     } else if (predicate instanceof Range) {
       return Ranges.transformClosed(
           Ranges.adjustClosed(
-              (Range<Long>) predicate, DiscreteDomains.longs()),
+              (Range<Long>) predicate, DiscreteDomain.longs()),
           this);
     } else {
       return null;
@@ -68,9 +68,9 @@ public class YearFieldPartitioner extends CalendarFieldPartitioner {
       return null;
     } else if (predicate instanceof Range) {
       //return Predicates.transformClosedConservative(
-      //    (Range<Long>) predicate, this, DiscreteDomains.integers());
+      //    (Range<Long>) predicate, this, DiscreteDomain.integers());
       Range<Long> adjusted = Ranges.adjustClosed(
-          (Range<Long>) predicate, DiscreteDomains.longs());
+          (Range<Long>) predicate, DiscreteDomain.longs());
       if (adjusted.hasLowerBound()) {
         long lower = adjusted.lowerEndpoint();
         int lowerImage = apply(lower);
