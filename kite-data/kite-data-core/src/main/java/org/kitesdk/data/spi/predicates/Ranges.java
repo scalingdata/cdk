@@ -119,22 +119,22 @@ public class Ranges {
       Range<C> range) {
     if (range.hasLowerBound()) {
       if (range.hasUpperBound()) {
-        return com.google.common.collect.Ranges.range(
+        return com.google.common.collect.Range.range(
             range.lowerEndpoint(),
             range.isLowerBoundOpen() ? BoundType.OPEN : BoundType.CLOSED,
             range.upperEndpoint(),
             range.isUpperBoundOpen() ? BoundType.OPEN : BoundType.CLOSED);
       } else {
-        return com.google.common.collect.Ranges.downTo(
+        return com.google.common.collect.Range.downTo(
             range.lowerEndpoint(),
             range.isLowerBoundOpen() ? BoundType.OPEN : BoundType.CLOSED);
       }
     } else if (range.hasUpperBound()) {
-      return com.google.common.collect.Ranges.upTo(
+      return com.google.common.collect.Range.upTo(
           range.upperEndpoint(),
           range.isUpperBoundOpen() ? BoundType.OPEN : BoundType.CLOSED);
     } else {
-      return com.google.common.collect.Ranges.all();
+      return com.google.common.collect.Range.all();
     }
   }
 }

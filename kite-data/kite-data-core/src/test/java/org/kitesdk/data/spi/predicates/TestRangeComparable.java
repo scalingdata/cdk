@@ -112,31 +112,31 @@ public class TestRangeComparable {
   public void testAsGuavaRange() {
     // some methods like asSet convert to Guava rather than reimplementing
     Assert.assertEquals("Should convert to guava singleton",
-        com.google.common.collect.Ranges.singleton(3),
+        com.google.common.collect.Range.singleton(3),
         Ranges.asGuavaRange(Ranges.singleton(3)));
     Assert.assertEquals("Should convert to guava open",
-        com.google.common.collect.Ranges.open(3, 5),
+        com.google.common.collect.Range.open(3, 5),
         Ranges.asGuavaRange(Ranges.open(3, 5)));
     Assert.assertEquals("Should convert to guava closed",
-        com.google.common.collect.Ranges.closed(3, 5),
+        com.google.common.collect.Range.closed(3, 5),
         Ranges.asGuavaRange(Ranges.closed(3, 5)));
     Assert.assertEquals("Should convert to guava openClosed",
-        com.google.common.collect.Ranges.openClosed(3, 5),
+        com.google.common.collect.Range.openClosed(3, 5),
         Ranges.asGuavaRange(Ranges.openClosed(3, 5)));
     Assert.assertEquals("Should convert to guava closedOpen",
-        com.google.common.collect.Ranges.closedOpen(3, 5),
+        com.google.common.collect.Range.closedOpen(3, 5),
         Ranges.asGuavaRange(Ranges.closedOpen(3, 5)));
     Assert.assertEquals("Should convert to guava atLeast",
-        com.google.common.collect.Ranges.atLeast(3),
+        com.google.common.collect.Range.atLeast(3),
         Ranges.asGuavaRange(Ranges.atLeast(3)));
     Assert.assertEquals("Should convert to guava greaterThan",
-        com.google.common.collect.Ranges.greaterThan(3),
+        com.google.common.collect.Range.greaterThan(3),
         Ranges.asGuavaRange(Ranges.greaterThan(3)));
     Assert.assertEquals("Should convert to guava atMost",
-        com.google.common.collect.Ranges.atMost(5),
+        com.google.common.collect.Range.atMost(5),
         Ranges.asGuavaRange(Ranges.atMost(5)));
     Assert.assertEquals("Should convert to guava lessThan",
-        com.google.common.collect.Ranges.lessThan(5),
+        com.google.common.collect.Range.lessThan(5),
         Ranges.asGuavaRange(Ranges.lessThan(5)));
   }
 

@@ -134,31 +134,31 @@ public class TestRangeCharSequence {
   public void testAsGuavaRange() {
     // some methods like asSet convert to Guava rather than reimplementing
     Assert.assertEquals("Should convert to guava singleton",
-        com.google.common.collect.Ranges.singleton("ab"),
+        com.google.common.collect.Range.singleton("ab"),
         Ranges.asGuavaRange(Ranges.singleton("ab")));
     Assert.assertEquals("Should convert to guava open",
-        com.google.common.collect.Ranges.open("ab", "cd"),
+        com.google.common.collect.Range.open("ab", "cd"),
         Ranges.asGuavaRange(Ranges.open("ab", "cd")));
     Assert.assertEquals("Should convert to guava closed",
-        com.google.common.collect.Ranges.closed("ab", "cd"),
+        com.google.common.collect.Range.closed("ab", "cd"),
         Ranges.asGuavaRange(Ranges.closed("ab", "cd")));
     Assert.assertEquals("Should convert to guava openClosed",
-        com.google.common.collect.Ranges.openClosed("ab", "cd"),
+        com.google.common.collect.Range.openClosed("ab", "cd"),
         Ranges.asGuavaRange(Ranges.openClosed("ab", "cd")));
     Assert.assertEquals("Should convert to guava closedOpen",
-        com.google.common.collect.Ranges.closedOpen("ab", "cd"),
+        com.google.common.collect.Range.closedOpen("ab", "cd"),
         Ranges.asGuavaRange(Ranges.closedOpen("ab", "cd")));
     Assert.assertEquals("Should convert to guava atLeast",
-        com.google.common.collect.Ranges.atLeast("ab"),
+        com.google.common.collect.Range.atLeast("ab"),
         Ranges.asGuavaRange(Ranges.atLeast("ab")));
     Assert.assertEquals("Should convert to guava greaterThan",
-        com.google.common.collect.Ranges.greaterThan("ab"),
+        com.google.common.collect.Range.greaterThan("ab"),
         Ranges.asGuavaRange(Ranges.greaterThan("ab")));
     Assert.assertEquals("Should convert to guava atMost",
-        com.google.common.collect.Ranges.atMost("cd"),
+        com.google.common.collect.Range.atMost("cd"),
         Ranges.asGuavaRange(Ranges.atMost("cd")));
     Assert.assertEquals("Should convert to guava lessThan",
-        com.google.common.collect.Ranges.lessThan("cd"),
+        com.google.common.collect.Range.lessThan("cd"),
         Ranges.asGuavaRange(Ranges.lessThan("cd")));
   }
 

@@ -17,7 +17,7 @@ package org.kitesdk.data.spi.partition;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.DiscreteDomain;
-import com.google.common.collect.DiscreteDomains;
+import com.google.common.collect.DiscreteDomain;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -228,7 +228,7 @@ public class RangeFieldPartitioner extends FieldPartitioner<String, String> {
 
     @Override
     public String maxValue() {
-      DiscreteDomains.integers();
+      DiscreteDomain.integers();
       return upperBounds.get(upperBounds.size() - 1);
     }
   }
