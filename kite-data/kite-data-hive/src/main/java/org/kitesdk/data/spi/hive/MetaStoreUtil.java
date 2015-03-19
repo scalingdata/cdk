@@ -121,7 +121,7 @@ public class MetaStoreUtil {
     }
     return table;
   }
-  
+
   public boolean tableExists(final String dbName, final String tableName) {
     ClientAction<Boolean> exists =
         new ClientAction<Boolean>() {
@@ -232,7 +232,7 @@ public class MetaStoreUtil {
           "Exception communicating with the Hive MetaStore", e);
     }
   }
-  
+
   public void dropTable(final String dbName, final String tableName) {
     ClientAction<Void> drop =
         new ClientAction<Void>() {
@@ -285,8 +285,58 @@ public class MetaStoreUtil {
     }
   }
 
+  public void dropPartition(final String dbName, final String tableName,
+                           final String path) {
+    ClientAction<Void> addPartition =
+        new ClientAction<Void>() {
+          @Override
+          public Void call() throws TException {
+            // purposely don't check if the partition already exists because
+            // getPartition(db, table, path) will throw an exception to indicate the
+            // partition doesn't exist also. this way, it's only one call.
+            client.dropPartitionByName(dbName, tableName, path, false);
+            return null;
+          }
+        };
+
+    try {
+      doWithRetry(addPartition);
+    } catch (NoSuchObjectException e) {
+      // this is okay
+    } catch (InvalidObjectException e) {
+      throw new DatasetOperationException(
+          "Invalid partition for " + dbName + "." + tableName + ": " + path, e);
+    } catch (MetaException e) {
+      throw new DatasetOperationException("Hive MetaStore exception", e);
+    } catch (TException e) {
+      throw new DatasetOperationException(
+          "Exception communicating with the Hive MetaStore", e);
+    }
+  }
+
   public boolean exists(String dbName, String tableName) {
     return tableExists(dbName, tableName);
+  }
+
+  public List<String> getAllPartitions(final String dbName, final String tableName) {
+    ClientAction<List<String>> create =
+        new ClientAction<List<String>>() {
+          @Override
+          public List<String> call() throws TException {
+            return client.listPartitionNames(dbName, tableName, Short.MAX_VALUE);
+          }
+        };
+
+    try {
+      return doWithRetry(create);
+    } catch (NoSuchObjectException e) {
+      return ImmutableList.of();
+    } catch (MetaException e) {
+      throw new DatasetOperationException("Hive MetaStore exception", e);
+    } catch (TException e) {
+      throw new DatasetOperationException(
+          "Exception communicating with the Hive MetaStore", e);
+    }
   }
 
   public List<String> getAllTables(final String dbName) {

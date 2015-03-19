@@ -42,6 +42,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
+import org.kitesdk.data.spi.PartitionListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,17 +60,20 @@ class FileSystemView<E> extends AbstractRefinableView<E> implements InputFormatA
 
   private final FileSystem fs;
   private final Path root;
+  private final PartitionListener partitionListener;
 
   FileSystemView(FileSystemDataset<E> dataset, Class<E> type) {
     super(dataset, type);
     this.fs = dataset.getFileSystem();
     this.root = dataset.getDirectory();
+    this.partitionListener = dataset.getPartitionListener();
   }
 
   private FileSystemView(FileSystemView<E> view, Constraints c) {
     super(view, c);
     this.fs = view.fs;
     this.root = view.root;
+    this.partitionListener = view.partitionListener;
   }
 
   @Override
@@ -164,7 +168,12 @@ class FileSystemView<E> extends AbstractRefinableView<E> implements InputFormatA
     boolean deleted = false;
     if (dataset.getDescriptor().isPartitioned()) {
       for (Pair<StorageKey, Path> partition : partitionIterator()) {
-        deleted = FileSystemUtil.cleanlyDelete(fs, root, partition.second()) || deleted;
+        boolean partitionDeleted = FileSystemUtil.cleanlyDelete(fs, root, partition.second());
+        if (partitionDeleted && partitionListener != null) {
+          partitionListener.partitionDeleted(dataset.getNamespace(), dataset.getName(),
+            partition.second().toString());
+        }
+        deleted = partitionDeleted || deleted;
       }
     }
     else {
