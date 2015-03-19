@@ -18,19 +18,28 @@ package org.kitesdk.data.spi.hive;
 import java.util.List;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
+import org.apache.avro.generic.GenericData.Record;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.metastore.api.FieldSchema;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.kitesdk.data.Dataset;
 import org.kitesdk.data.DatasetDescriptor;
+import org.kitesdk.data.DatasetWriter;
 import org.kitesdk.data.PartitionStrategy;
+import org.kitesdk.data.RefinableView;
 import org.kitesdk.data.spi.DatasetRepositories;
 import org.kitesdk.data.spi.DatasetRepository;
-import org.kitesdk.data.spi.DefaultConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TestHivePartitioning {
+
+  private static Logger logger = LoggerFactory.getLogger(TestHivePartitioning.class);
 
   @Before
   @After
@@ -146,6 +155,70 @@ public class TestHivePartitioning {
     repo.delete("ns", "records"); // ensure it does not already exist
     repo.create("ns", "records", descriptor);
     repo.delete("ns", "records"); // clean up
+  }
+
+  @Test
+  public void testDeleteAllDropsPartitions() {
+    PartitionStrategy ymdStrategy = new PartitionStrategy.Builder()
+        .year("timestamp")
+        .month("timestamp")
+        .day("timestamp")
+        .build();
+
+    DatasetRepository repo = DatasetRepositories.repositoryFor("repo:hive:target/");
+    repo.delete("ns", "records"); // ensure it does not already exist
+    Dataset<Record> dataset = repo.create("ns", "records", new DatasetDescriptor.Builder()
+      .schema(schema)
+      .partitionStrategy(ymdStrategy)
+      .build(), Record.class
+    );
+
+    DatasetWriter<Record> writer = dataset.newWriter();
+
+    DateTime june16th = new DateTime(2015, 6, 16, 0, 0, DateTimeZone.UTC);
+    writeRecords(june16th, writer);
+
+    DateTime june17th = new DateTime(2015, 6, 17, 0, 0, DateTimeZone.UTC);
+    writeRecords(june17th, writer);
+
+    DateTime june18th = new DateTime(2015, 6, 18, 0, 0, DateTimeZone.UTC);
+    writeRecords(june18th, writer);
+
+    DateTime june19th = new DateTime(2015, 6, 19, 0, 0, DateTimeZone.UTC);
+    writeRecords(june19th, writer);
+
+    writer.close();
+
+    MetaStoreUtil metastore = new MetaStoreUtil(new Configuration());
+    List<String> partitions = metastore.getAllPartitions("ns", "records");
+    logger.debug(partitions.toString());
+    Assert.assertArrayEquals("Unexpected partitions",
+      new String[] {
+        "year=2015/month=06/day=16",  "year=2015/month=06/day=17",
+        "year=2015/month=06/day=18",  "year=2015/month=06/day=19"
+      },
+      partitions.toArray());
+
+    RefinableView<Record> recordsBeforeJune18th = dataset.toBefore("timestamp", june18th.getMillis());
+    Assert.assertTrue("Error deleteing records", recordsBeforeJune18th.deleteAll());
+
+    partitions = metastore.getAllPartitions("ns", "records");
+    logger.debug(partitions.toString());
+    Assert.assertArrayEquals("Unexpected partitions",
+      new String[] { "year=2015/month=06/day=18",  "year=2015/month=06/day=19"},
+      partitions.toArray());
+
+    repo.delete("ns", "records"); // clean up
+  }
+
+  private static void writeRecords(DateTime day, DatasetWriter<Record> writer) {
+    for (int hour = 0; hour < 24; hour++) {
+      Record record = new Record(schema);
+      record.put("timestamp", day.withHourOfDay(hour).getMillis());
+      record.put("group", hour);
+      record.put("id", "id");
+      writer.write(record);
+    }
   }
 
 }

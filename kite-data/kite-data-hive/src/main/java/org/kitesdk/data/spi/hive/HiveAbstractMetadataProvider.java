@@ -209,6 +209,11 @@ abstract class HiveAbstractMetadataProvider extends AbstractMetadataProvider imp
     getMetaStoreUtil().addPartition(namespace, name, path);
   }
 
+  @Override
+  public void partitionDeleted(String namespace, String name, String path) {
+    getMetaStoreUtil().dropPartition(namespace, name, path);
+  }
+
   /**
    * Checks whether the Hive table {@code namespace.name} exists or if
    * {@code default.name} exists and should be used.
