@@ -447,7 +447,7 @@ public abstract class TestCrunchDatasets extends MiniDFSTest {
     PCollection<NewUserRecord> processed = data.parallelDo(new UserRecordIdentityFn(),
         Avros.records(NewUserRecord.class));
 
-    pipeline.write(processed, CrunchDatasets.asTarget(out));
+    pipeline.write(processed, CrunchDatasets.asTarget((View<Record>)out));
 
     DatasetReader reader = out.newReader();
 
@@ -503,7 +503,7 @@ public abstract class TestCrunchDatasets extends MiniDFSTest {
     PCollection<NewUserRecord> processed = data.parallelDo(new UserRecordIdentityFn(),
         Avros.records(NewUserRecord.class));
 
-    pipeline.write(processed, CrunchDatasets.asTarget(out));
+    pipeline.write(processed, CrunchDatasets.asTarget((View<Record>)out));
 
     DatasetReader reader = out.newReader();
 
