@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.kitesdk</groupId>
     <artifactId>kite-data</artifactId>
-    <version>0.15.0-cdh5.2.1-sd1.1.0-SNAPSHOT</version>
+    <version>0.15.0-cdh5.2.1-sd1.1.0-rc1</version>
   </parent>
 
   <name>Kite Data Hive Module</name>
@@ -177,7 +177,7 @@
       <groupId>org.kitesdk</groupId>
       <artifactId>kite-test-shims</artifactId>
       <scope>test</scope>
-      <version>0.15.0-cdh5.2.1-sd1.1.0-SNAPSHOT</version>
+      <version>0.15.0-cdh5.2.1-sd1.1.0-rc1</version>
     </dependency>
 
     <dependency>
