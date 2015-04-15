@@ -30,6 +30,7 @@ import org.kitesdk.data.spi.FieldPartitioner;
 import org.kitesdk.data.spi.PartitionListener;
 import org.kitesdk.data.spi.StorageKey;
 import org.kitesdk.data.spi.ReaderWriterState;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.cache.CacheBuilder;
@@ -186,7 +187,8 @@ abstract class PartitionedDatasetWriter<E, W extends FileSystemWriter<E>> extend
         .toString();
   }
 
-  private static class DatasetWriterCacheLoader<E> extends
+  @VisibleForTesting
+  static class DatasetWriterCacheLoader<E> extends
     CacheLoader<StorageKey, FileSystemWriter<E>> {
 
     private final FileSystemView<E> view;
@@ -216,6 +218,9 @@ abstract class PartitionedDatasetWriter<E, W extends FileSystemWriter<E>> extend
             dataset.getNamespace(), dataset.getName(), partition.toString());
       }
 
+      // initialize the writer after calling the listener
+      // this lets the listener decide if and how to create the
+      // partition directory
       writer.initialize();
 
       return writer;
