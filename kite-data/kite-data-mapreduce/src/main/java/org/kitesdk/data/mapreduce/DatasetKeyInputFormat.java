@@ -16,9 +16,17 @@
 package org.kitesdk.data.mapreduce;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.Throwables;
+import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.apache.avro.generic.GenericData;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
@@ -39,6 +47,7 @@ import org.kitesdk.data.spi.InputFormatAccessor;
 import org.kitesdk.data.spi.PartitionKey;
 import org.kitesdk.data.spi.PartitionedDataset;
 import org.kitesdk.data.spi.filesystem.FileSystemDataset;
+import org.kitesdk.shaded.com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,6 +73,8 @@ public class DatasetKeyInputFormat<E> extends InputFormat<E, Void>
   public static final String KITE_DATASET_NAME = "kite.inputDatasetName";
   public static final String KITE_PARTITION_DIR = "kite.inputPartitionDir";
   public static final String KITE_TYPE = "kite.inputEntityType";
+  public static final String KITE_USE_MULTI_INPUT_RECORD_READER =
+    "kite.useMultiInputRecordReader";
 
   private Configuration conf;
   private InputFormat<E, Void> delegate;
@@ -139,6 +150,11 @@ public class DatasetKeyInputFormat<E> extends InputFormat<E, Void>
      */
     public <E> ConfigBuilder withType(Class<E> type) {
       conf.setClass(KITE_TYPE, type, type);
+      return this;
+    }
+
+    public ConfigBuilder useMultiInputRecordReader() {
+      conf.setBoolean(KITE_USE_MULTI_INPUT_RECORD_READER, true);
       return this;
     }
   }
@@ -279,14 +295,100 @@ public class DatasetKeyInputFormat<E> extends InputFormat<E, Void>
       justification="Delegate set by setConf")
   public List<InputSplit> getSplits(JobContext jobContext) throws IOException,
       InterruptedException {
-    return delegate.getSplits(jobContext);
+    if (jobContext.getConfiguration().getBoolean(
+      KITE_USE_MULTI_INPUT_RECORD_READER, false)) {
+      return getMultiSplits(jobContext);
+    } else {
+      return delegate.getSplits(jobContext);
+    }
+
+  }
+
+  private List<InputSplit> getMultiSplits(JobContext jobContext) throws IOException,
+      InterruptedException {
+
+    List<InputSplit> inputSplits = Lists.newArrayList();
+    Map<String, MultiInputSplit> currentSplits = Maps.newHashMap();
+    Map<String, Long> totalLength = Maps.newHashMap();
+
+    List<InputSplit> delegateSplits = delegate.getSplits(jobContext);
+    sortByLength(delegateSplits);
+
+    for (InputSplit delegateSplit : delegateSplits) {
+      for (String location : delegateSplit.getLocations()) {
+        if (!currentSplits.containsKey(location)) {
+          currentSplits.put(location, new MultiInputSplit(location));
+          totalLength.put(location, 0l);
+        }
+      }
+    }
+
+    for (InputSplit delegateSplit : delegateSplits) {
+      String minLocation = null;
+      long minLength = Long.MAX_VALUE;
+      // pick the location with the smallest total data
+      for (String location : delegateSplit.getLocations()) {
+        if (totalLength.get(location) <= minLength) {
+          minLocation = location;
+          minLength = totalLength.get(location);
+        }
+      }
+
+      // add this split to the current split for that location
+      MultiInputSplit inputSplit = currentSplits.get(minLocation);
+      inputSplit.addSplit(delegateSplit);
+      totalLength.put(minLocation, totalLength.get(minLocation) + delegateSplit.getLength());
+      if (inputSplit.getLength() >= 256*1024*1024) {
+        // if this split is >= 256MB, create a new split for the location
+        inputSplits.add(inputSplit);
+        currentSplits.put(minLocation, new MultiInputSplit(minLocation));
+      }
+    }
+
+    for (Entry<String, MultiInputSplit> entry: currentSplits.entrySet()) {
+      if (entry.getValue().getNumSplits() > 0) {
+        inputSplits.add(entry.getValue());
+      }
+    }
+
+    return inputSplits;
+  }
+
+  private void sortByLength(List<InputSplit> splits) throws IOException, InterruptedException {
+   try {
+      Collections.sort(splits, new Comparator<InputSplit>() {
+
+        @Override
+        public int compare(InputSplit leftSplit, InputSplit rightSplit) {
+          try {
+            return Long.compare(rightSplit.getLength(), leftSplit.getLength());
+          } catch (IOException ex) {
+            throw Throwables.propagate(ex);
+          } catch (InterruptedException ex) {
+            throw Throwables.propagate(ex);
+          }
+        }
+      });
+    } catch (RuntimeException ex) {
+      Throwable cause = ex.getCause();
+      if (cause != null) {
+        Throwables.propagateIfPossible(cause, IOException.class, InterruptedException.class);
+      } else {
+        throw Throwables.propagate(ex);
+      }
+    }
   }
 
   @Override
   @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR",
       justification="Delegate set by setConf")
   public RecordReader<E, Void> createRecordReader(InputSplit inputSplit, TaskAttemptContext taskAttemptContext) throws IOException, InterruptedException {
-    return delegate.createRecordReader(inputSplit, taskAttemptContext);
+    if (taskAttemptContext.getConfiguration().getBoolean(
+      KITE_USE_MULTI_INPUT_RECORD_READER, false)) {
+      return new MultiInputRecordReader<E>(delegate);
+    } else {
+      return delegate.createRecordReader(inputSplit, taskAttemptContext);
+    }
   }
 
 }
