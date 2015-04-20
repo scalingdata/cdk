@@ -33,6 +33,7 @@ import org.apache.crunch.Pipeline;
 import org.apache.crunch.Target;
 import org.apache.crunch.impl.mr.MRPipeline;
 import org.apache.crunch.types.avro.Avros;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.junit.After;
@@ -55,6 +56,7 @@ import org.kitesdk.data.spi.PartitionedDataset;
 import org.kitesdk.data.View;
 import org.kitesdk.data.spi.LastModifiedAccessor;
 import org.kitesdk.data.URIBuilder;
+import org.kitesdk.data.mapreduce.DatasetKeyInputFormat;
 import org.kitesdk.data.user.NewUserRecord;
 
 import static org.kitesdk.data.spi.filesystem.DatasetTestUtilities.USER_SCHEMA;
@@ -140,6 +142,29 @@ public abstract class TestCrunchDatasets extends MiniDFSTest {
   }
 
   @Test
+  public void testGenericParquetMultiInputRecordReader() throws IOException {
+    Dataset<Record> inputDataset = repo.create("ns", "in", new DatasetDescriptor.Builder()
+        .schema(USER_SCHEMA).format(Formats.PARQUET).build());
+    Dataset<Record> outputDataset = repo.create("ns", "out", new DatasetDescriptor.Builder()
+        .schema(USER_SCHEMA).format(Formats.PARQUET).build());
+
+    // write two files, each of 5 records
+    writeTestUsers(inputDataset, 5, 0);
+    writeTestUsers(inputDataset, 5, 5);
+
+    Configuration conf = new Configuration();
+    DatasetKeyInputFormat.configure(conf).useMultiInputRecordReader();
+    Pipeline pipeline = new MRPipeline(TestCrunchDatasets.class, conf);
+    PCollection<GenericData.Record> data = pipeline.read(
+        CrunchDatasets.asSource(inputDataset));
+    pipeline.write(data, CrunchDatasets.asTarget((View<Record>)outputDataset), Target.WriteMode.APPEND);
+    pipeline.run();
+
+    checkTestUsers(outputDataset, 10);
+  }
+
+  @Test
+  @SuppressWarnings("deprecation") // still testing asTarget/asSource(Dataset)
   public void testPartitionedSource() throws IOException {
     PartitionStrategy partitionStrategy = new PartitionStrategy.Builder().hash(
         "username", 2).build();

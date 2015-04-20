@@ -101,6 +101,16 @@ public class TestMapReduce extends FileSystemTestBase {
   }
 
   @Test
+  public void testJobTwoFiles() throws Exception {
+    populateInputDatasetWithTwoFiles();
+
+    Job job = createJob();
+    DatasetKeyInputFormat.configure(job).useMultiInputRecordReader();
+    Assert.assertTrue(job.waitForCompletion(true));
+    checkOutput(false);
+  }
+
+  @Test
   public void testJobEmptyView() throws Exception {
     Job job = createJob();
     Assert.assertTrue(job.waitForCompletion(true));
@@ -163,6 +173,20 @@ public class TestMapReduce extends FileSystemTestBase {
     writer.write(newStringRecord("apple"));
     writer.write(newStringRecord("banana"));
     writer.write(newStringRecord("banana"));
+    writer.write(newStringRecord("carrot"));
+    writer.write(newStringRecord("apple"));
+    writer.write(newStringRecord("apple"));
+    writer.close();
+  }
+
+  private void populateInputDatasetWithTwoFiles() {
+    DatasetWriter<GenericData.Record> writer = inputDataset.newWriter();
+    writer.write(newStringRecord("apple"));
+    writer.write(newStringRecord("banana"));
+    writer.write(newStringRecord("banana"));
+    writer.close();
+
+    writer = inputDataset.newWriter();
     writer.write(newStringRecord("carrot"));
     writer.write(newStringRecord("apple"));
     writer.write(newStringRecord("apple"));
