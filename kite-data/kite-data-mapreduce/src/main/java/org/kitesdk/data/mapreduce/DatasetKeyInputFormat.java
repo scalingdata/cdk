@@ -331,7 +331,7 @@ public class DatasetKeyInputFormat<E> extends InputFormat<E, Void>
         @Override
         public int compare(InputSplit leftSplit, InputSplit rightSplit) {
           try {
-            return Long.compare(rightSplit.getLength(), leftSplit.getLength());
+            return Long.valueOf(rightSplit.getLength()).compareTo(leftSplit.getLength());
           } catch (IOException ex) {
             throw Throwables.propagate(ex);
           } catch (InterruptedException ex) {
