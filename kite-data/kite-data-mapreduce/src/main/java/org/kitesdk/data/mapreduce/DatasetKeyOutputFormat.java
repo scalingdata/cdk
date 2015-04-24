@@ -46,6 +46,7 @@ import org.kitesdk.data.spi.Compatibility;
 import org.kitesdk.data.spi.DataModelUtil;
 import org.kitesdk.data.spi.DatasetRepositories;
 import org.kitesdk.data.spi.DatasetRepository;
+import org.kitesdk.data.spi.DefaultConfiguration;
 import org.kitesdk.data.spi.Mergeable;
 import org.kitesdk.data.spi.PartitionKey;
 import org.kitesdk.data.spi.Registration;
@@ -53,6 +54,8 @@ import org.kitesdk.data.spi.TemporaryDatasetRepository;
 import org.kitesdk.data.spi.TemporaryDatasetRepositoryAccessor;
 import org.kitesdk.data.spi.filesystem.FileSystemDataset;
 import org.kitesdk.data.spi.filesystem.FileSystemProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A MapReduce {@code OutputFormat} for writing to a {@link Dataset}.
@@ -63,6 +66,9 @@ import org.kitesdk.data.spi.filesystem.FileSystemProperties;
  * @param <E> The type of entities in the {@code Dataset}.
  */
 public class DatasetKeyOutputFormat<E> extends OutputFormat<E, Void> {
+
+  private static final Logger LOG =
+      LoggerFactory.getLogger(DatasetKeyOutputFormat.class);
 
   public static final String KITE_OUTPUT_URI = "kite.outputUri";
   public static final String KITE_PARTITION_DIR = "kite.outputPartitionDir";
@@ -505,6 +511,7 @@ public class DatasetKeyOutputFormat<E> extends OutputFormat<E, Void> {
   @SuppressWarnings("deprecation")
   private static <E> View<E> load(JobContext jobContext) {
     Configuration conf = Hadoop.JobContext.getConfiguration.invoke(jobContext);
+    DefaultConfiguration.set(conf);
     Class<E> type = getType(jobContext);
 
     String outputUri = conf.get(KITE_OUTPUT_URI);

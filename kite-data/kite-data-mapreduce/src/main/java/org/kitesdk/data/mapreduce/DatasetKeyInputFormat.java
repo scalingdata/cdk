@@ -19,8 +19,6 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -44,6 +42,7 @@ import org.kitesdk.data.spi.PartitionKey;
 import org.kitesdk.data.spi.PartitionedDataset;
 import org.kitesdk.data.TypeNotFoundException;
 import org.kitesdk.data.View;
+import org.kitesdk.data.spi.DefaultConfiguration;
 import org.kitesdk.data.spi.InputFormatAccessor;
 import org.kitesdk.data.spi.filesystem.FileSystemDataset;
 import org.kitesdk.shaded.com.google.common.collect.Lists;
@@ -203,6 +202,7 @@ public class DatasetKeyInputFormat<E> extends InputFormat<E, Void>
   @Override
   public void setConf(Configuration configuration) {
     conf = configuration;
+    DefaultConfiguration.set(conf);
     View<E> view = load(configuration);
 
     String partitionDir = conf.get(KITE_PARTITION_DIR);
