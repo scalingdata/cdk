@@ -39,6 +39,7 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocalFileSystem;
 import org.apache.hadoop.fs.Path;
 import org.kitesdk.cli.Command;
+import org.kitesdk.data.spi.DefaultConfiguration;
 import org.kitesdk.data.spi.HadoopFileSystemURLStreamHandler;
 import org.slf4j.Logger;
 
@@ -194,6 +195,7 @@ public abstract class BaseCommand implements Command, Configurable {
   @Override
   public void setConf(Configuration conf) {
     this.conf = conf;
+    DefaultConfiguration.set(conf);
     HadoopFileSystemURLStreamHandler.setDefaultConf(conf);
   }
 
