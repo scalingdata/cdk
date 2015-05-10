@@ -195,7 +195,6 @@ public abstract class BaseCommand implements Command, Configurable {
   @Override
   public void setConf(Configuration conf) {
     this.conf = conf;
-    DefaultConfiguration.set(conf);
     HadoopFileSystemURLStreamHandler.setDefaultConf(conf);
   }
 

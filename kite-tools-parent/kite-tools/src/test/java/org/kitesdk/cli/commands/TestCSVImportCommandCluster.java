@@ -41,6 +41,7 @@ import org.kitesdk.data.Datasets;
 import org.kitesdk.data.MiniDFSTest;
 import org.kitesdk.data.TestHelpers;
 import org.kitesdk.data.URIBuilder;
+import org.kitesdk.data.spi.DefaultConfiguration;
 import org.kitesdk.data.spi.filesystem.DatasetTestUtilities;
 import org.slf4j.Logger;
 
@@ -58,6 +59,7 @@ public class TestCSVImportCommandCluster extends MiniDFSTest {
   private Logger console = null;
   private CSVImportCommand command;
   private Dataset<GenericData.Record> dataset;
+  private Configuration originalConf;
 
   private static final Set<GenericData.Record> expected = Sets.newHashSet();
 
@@ -91,6 +93,7 @@ public class TestCSVImportCommandCluster extends MiniDFSTest {
 
   @Before
   public void setup() throws Exception {
+    originalConf = DefaultConfiguration.get();
     TestUtil.run("create", datasetName, "-r", repoURI, "-s", avsc);
 
     this.dataset = Datasets.load(URIBuilder.build(repoURI, "default", datasetName),
@@ -108,6 +111,7 @@ public class TestCSVImportCommandCluster extends MiniDFSTest {
 
   @After
   public void removeData() throws Exception {
+    DefaultConfiguration.set(originalConf);
     TestUtil.run("delete", datasetName, "-r", repoURI);
   }
 

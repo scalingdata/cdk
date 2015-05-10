@@ -26,7 +26,7 @@ ${MVN} ${MVN_FLAGS} \
     -Dincludes=**/pom.xml \
     -Dexcludes=**/target/**/pom.xml \
   scm:checkin \
-    -Dmessage="SD-BUILD: Preparing for release ${KITE_RELEASE_VERSION}"
+    -Dmessage="ROCANA-BUILD: Preparing for release ${KITE_RELEASE_VERSION}"
 
 # Deploy the release to the maven repo and tag the release in git
 ${MVN} ${MVN_FLAGS} \
@@ -46,4 +46,4 @@ ${MVN} ${MVN_FLAGS} \
     -Dincludes=**/pom.xml \
     -Dexcludes=**/target/**/pom.xml \
   scm:checkin \
-    -Dmessage="SD-BUILD: Preparing for ${KITE_DEVELOPMENT_VERSION} development"
+    -Dmessage="ROCANA-BUILD: Preparing for ${KITE_DEVELOPMENT_VERSION} development"
