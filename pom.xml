@@ -34,7 +34,6 @@
     <module>kite-hadoop-compatibility</module>
     <module>kite-hbase-dependencies</module>
     <module>kite-data</module>
-    <module>kite-app-parent</module>
     <module>kite-maven-plugin</module>
     <module>kite-tools-parent</module>
     <module>kite-minicluster</module>
