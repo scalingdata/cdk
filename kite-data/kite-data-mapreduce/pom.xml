@@ -99,19 +99,37 @@
     <dependency>
       <groupId>org.kitesdk</groupId>
       <artifactId>kite-data-core</artifactId>
-      <version>1.0.0-cdh5.4.0-rocana1.3.0-SNAPSHOT</version>
+      <classifier>${proj.classifier}</classifier>
+      <exclusions>
+        <!--
+        This is terrible. Needed to avoid pulling in the non-classified
+        transitive dependency
+        -->
+        <exclusion>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>kite-hadoop-compatibility</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.kitesdk</groupId>
       <artifactId>kite-data-hive</artifactId>
-      <version>1.0.0-cdh5.4.0-rocana1.3.0-SNAPSHOT</version>
       <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-data-hbase</artifactId>
-      <version>1.0.0-cdh5.4.0-rocana1.3.0-SNAPSHOT</version>
-      <optional>true</optional>
+      <classifier>${proj.classifier}</classifier>
+      <exclusions>
+        <!--
+        This is terrible. Needed to avoid pulling in the non-classified
+        transitive dependency
+        -->
+        <exclusion>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>kite-data-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>kite-hadoop-compatibility</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- Hadoop and HBase -->
@@ -123,13 +141,8 @@
     </dependency>
     <dependency>
       <groupId>org.kitesdk</groupId>
-      <artifactId>${artifact.hbase-deps}</artifactId>
-      <type>pom</type>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kitesdk</groupId>
       <artifactId>kite-hadoop-compatibility</artifactId>
+      <classifier>${proj.classifier}</classifier>
     </dependency>
 
     <!-- Formats -->
@@ -165,16 +178,22 @@
     <dependency>
       <groupId>org.kitesdk</groupId>
       <artifactId>kite-data-core</artifactId>
-      <version>1.0.0-cdh5.4.0-rocana1.3.0-SNAPSHOT</version>
       <type>test-jar</type>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-data-hbase</artifactId>
-      <version>1.0.0-cdh5.4.0-rocana1.3.0-SNAPSHOT</version>
-      <type>test-jar</type>
-      <scope>test</scope>
+      <exclusions>
+        <!--
+        This is terrible. Needed to avoid pulling in the non-classified
+        transitive dependency
+        -->
+        <exclusion>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>kite-data-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>kite-hadoop-compatibility</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -183,13 +202,64 @@
       <type>pom</type>
       <scope>test</scope>
     </dependency>
-
-    <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>${artifact.hbase-test-deps}</artifactId>
-      <type>pom</type>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
+  <profiles>
+    <profile>
+      <id>hdp2</id>
+      <activation>
+        <property>
+          <name>hadoop.profile</name>
+          <value>hdp2</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-install-plugin</artifactId>
+            <version>${vers.maven-install-plugin}</version>
+            <executions>
+              <execution>
+                <id>install-hdp-classifier</id>
+                <phase>install</phase>
+                <goals>
+                  <goal>install-file</goal>
+                </goals>
+                <configuration>
+                  <file>${project.build.directory}/${project.artifactId}-${project.version}-${proj.classifier}.jar</file>
+                  <classifier>${proj.classifier}</classifier>
+                  <generatePom>false</generatePom>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <version>${vers.maven-deploy-plugin}</version>
+            <executions>
+              <execution>
+                <id>deploy-hdp-classifier</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>deploy-file</goal>
+                </goals>
+                <configuration>
+                  <file>${project.build.directory}/${project.artifactId}-${project.version}-${proj.classifier}.jar</file>
+                  <repositoryId>com.scalingdata.snapshots</repositoryId>
+                  <url>http://repository.scalingdata.com/content/repositories/com.scalingdata.snapshots/</url>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>${project.artifactId}</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>${proj.classifier}</classifier>
+                  <generatePom>false</generatePom>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

@@ -17,7 +17,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>kite-hbase-cdh5-dependencies</artifactId>
+  <artifactId>kite-hbase-hdp2-dependencies</artifactId>
   <packaging>pom</packaging>
   <version>1.0.0-cdh5.4.0-rocana1.3.0-SNAPSHOT</version>
 
@@ -27,16 +27,16 @@
     <version>1.0.0-cdh5.4.0-rocana1.3.0-SNAPSHOT</version>
   </parent>
 
-  <name>Kite HBase CDH5 Dependencies Module</name>
+  <name>Kite HBase HDP2 Dependencies Module</name>
   <description>
-    The Kite HBase Dependencies module aggregates CDH5 HBase dependencies
+    The Kite HBase Dependencies module aggregates HDP2 HBase dependencies
   </description>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.hbase</groupId>
       <artifactId>hbase-client</artifactId>
-      <version>${cdh.hbase.version}</version>
+      <version>${vers.hdp.hbase}</version>
       <!-- exclude server-side parts that conflict with running in a webapp -->
       <exclusions>
         <exclusion>
@@ -73,7 +73,7 @@
     <dependency>
       <groupId>org.apache.hbase</groupId>
       <artifactId>hbase-server</artifactId>
-      <version>${cdh.hbase.version}</version>
+      <version>${vers.hdp.hbase}</version>
       <!-- exclude server-side parts that conflict with running in a webapp -->
       <exclusions>
         <exclusion>
@@ -143,58 +143,53 @@
       </exclusions>
     </dependency>
   </dependencies>
-
+  
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.apache.hbase</groupId>
-        <artifactId>hbase-annotations</artifactId>
-        <version>${cdh.hbase.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.hbase</groupId>
         <artifactId>hbase-common</artifactId>
-        <version>${cdh.hbase.version}</version>
+        <version>${vers.hdp.hbase}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.hbase</groupId>
         <artifactId>hbase-protocol</artifactId>
-        <version>${cdh.hbase.version}</version>
+        <version>${vers.hdp.hbase}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-mapreduce-client-core</artifactId>
-        <version>${cdh.hadoop.version}</version>
+        <version>${vers.hdp.hadoop}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.hbase</groupId>
         <artifactId>hbase-prefix-tree</artifactId>
-        <version>${cdh.hbase.version}</version>
+        <version>${vers.hdp.hbase}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-mapreduce-client-app</artifactId>
-        <version>${cdh.hadoop.version}</version>
+        <version>${vers.hdp.hadoop}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
-        <version>${cdh.hadoop.version}</version>
+        <version>${vers.hdp.hadoop}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-annotations</artifactId>
-        <version>${cdh.hadoop.version}</version>
+        <version>${vers.hdp.hadoop}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-yarn-common</artifactId>
-        <version>${cdh.hadoop.version}</version>
+        <version>${vers.hdp.hadoop}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.hbase</groupId>
         <artifactId>hbase-common</artifactId>
-        <version>${cdh.hbase.version}</version>
+        <version>${vers.hdp.hbase}</version>
         <classifier>tests</classifier>
       </dependency>
       <dependency>
@@ -205,59 +200,52 @@
       <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-auth</artifactId>
-        <version>${cdh.hadoop.version}</version>
+        <version>${vers.hdp.hadoop}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-common</artifactId>
-        <version>${cdh.hadoop.version}</version>
+        <version>${vers.hdp.hadoop}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.hbase</groupId>
         <artifactId>hbase-hadoop-compat</artifactId>
-        <version>${cdh.hbase.version}</version>
+        <version>${vers.hdp.hbase}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.hbase</groupId>
         <artifactId>hbase-hadoop2-compat</artifactId>
-        <version>${cdh.hbase.version}</version>
+        <version>${vers.hdp.hbase}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-mapreduce-client-common</artifactId>
-        <version>${cdh.hadoop.version}</version>
+        <version>${vers.hdp.hadoop}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-yarn-client</artifactId>
-        <version>${cdh.hadoop.version}</version>
+        <version>${vers.hdp.hadoop}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-yarn-server-common</artifactId>
-        <version>${cdh.hadoop.version}</version>
+        <version>${vers.hdp.hadoop}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-mapreduce-client-shuffle</artifactId>
-        <version>${cdh.hadoop.version}</version>
+        <version>${vers.hdp.hadoop}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-yarn-api</artifactId>
-        <version>${cdh.hadoop.version}</version>
+        <version>${vers.hdp.hadoop}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-hdfs</artifactId>
-        <version>${cdh.hadoop.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.hadoop</groupId>
-        <artifactId>hadoop-hdfs</artifactId>
-        <version>${cdh.hadoop.version}</version>
-        <type>test-jar</type>
-        <classifier>tests</classifier>
+        <version>${vers.hdp.hadoop}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

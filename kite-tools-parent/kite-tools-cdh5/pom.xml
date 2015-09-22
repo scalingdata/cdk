@@ -126,14 +126,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-hbase-cdh5-dependencies</artifactId>
-      <version>${project.version}</version>
-      <type>pom</type>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.apache.hive</groupId>
       <artifactId>hive-exec</artifactId>
       <version>${vers.hive}</version>

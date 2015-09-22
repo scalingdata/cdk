@@ -129,6 +129,7 @@
     <dependency>
       <groupId>org.kitesdk</groupId>
       <artifactId>kite-hadoop-compatibility</artifactId>
+      <classifier>${proj.classifier}</classifier>
     </dependency>
 
     <!-- Formats -->
@@ -213,4 +214,62 @@
 
   </dependencies>
 
+  <profiles>
+    <profile>
+      <id>hdp2</id>
+      <activation>
+        <property>
+          <name>hadoop.profile</name>
+          <value>hdp2</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-install-plugin</artifactId>
+            <version>${vers.maven-install-plugin}</version>
+            <executions>
+              <execution>
+                <id>install-hdp-classifier</id>
+                <phase>install</phase>
+                <goals>
+                  <goal>install-file</goal>
+                </goals>
+                <configuration>
+                  <file>${project.build.directory}/${project.artifactId}-${project.version}-${proj.classifier}.jar</file>
+                  <classifier>${proj.classifier}</classifier>
+                  <generatePom>false</generatePom>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <version>${vers.maven-deploy-plugin}</version>
+            <executions>
+              <execution>
+                <id>deploy-hdp-classifier</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>deploy-file</goal>
+                </goals>
+                <configuration>
+                  <file>${project.build.directory}/${project.artifactId}-${project.version}-${proj.classifier}.jar</file>
+                  <repositoryId>com.scalingdata.snapshots</repositoryId>
+                  <url>http://repository.scalingdata.com/content/repositories/com.scalingdata.snapshots/</url>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>${project.artifactId}</artifactId>
+                  <version>${project.version}</version>
+                  <classifier>${proj.classifier}</classifier>
+                  <generatePom>false</generatePom>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

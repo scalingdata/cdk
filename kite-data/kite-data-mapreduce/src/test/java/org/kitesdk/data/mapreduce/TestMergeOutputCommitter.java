@@ -59,7 +59,7 @@ public class TestMergeOutputCommitter extends FileSystemTestBase {
     DatasetKeyOutputFormat.MergeOutputCommitter<Object> outputCommitter
       = new DatasetKeyOutputFormat.MergeOutputCommitter<Object>();
 
-    Configuration conf = DefaultConfiguration.get();
+    Configuration conf = new Configuration();
     DatasetKeyOutputFormat.configure(conf).appendTo(outputDataset);
 
     JobID jobId = new JobID("jt", 42);

@@ -45,7 +45,7 @@ import org.kitesdk.data.View;
 import org.kitesdk.data.spi.DefaultConfiguration;
 import org.kitesdk.data.spi.InputFormatAccessor;
 import org.kitesdk.data.spi.filesystem.FileSystemDataset;
-import org.kitesdk.shaded.com.google.common.collect.Lists;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

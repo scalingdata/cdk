@@ -15,6 +15,7 @@
  */
 package org.kitesdk.data.spark;
 
+import com.typesafe.config.Config;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.avro.generic.GenericData.Record;

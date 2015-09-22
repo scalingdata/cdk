@@ -17,7 +17,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>kite-hadoop-cdh5-dependencies</artifactId>
+  <artifactId>kite-hadoop-hdp2-dependencies</artifactId>
   <packaging>pom</packaging>
   <version>1.0.0-cdh5.4.0-rocana1.3.0-SNAPSHOT</version>
 
@@ -27,16 +27,16 @@
     <version>1.0.0-cdh5.4.0-rocana1.3.0-SNAPSHOT</version>
   </parent>
 
-  <name>Kite Hadoop CDH5 Dependencies Module</name>
+  <name>Kite Hadoop HDP2 Dependencies Module</name>
   <description>
-    The Kite Hadoop Dependencies module aggregates CDH5 Hadoop dependencies
+    The Kite Hadoop Dependencies module aggregates HDP2 Hadoop dependencies
   </description>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-client</artifactId>
-      <version>${cdh.hadoop.version}</version>
+      <version>${vers.hdp.hadoop}</version>
       <!-- exclude server-side parts that conflict with running in a webapp -->
       <exclusions>
         <exclusion>
@@ -87,7 +87,7 @@
       <groupId>org.apache.avro</groupId>
       <artifactId>avro-mapred</artifactId>
       <classifier>hadoop2</classifier>
-      <version>${cdh.avro.version}</version>
+      <version>${vers.hdp.avro}</version>
       <!-- Avro IPC is not used and pulls in server-side dependencies -->
       <exclusions>
         <exclusion>
@@ -97,6 +97,76 @@
       </exclusions>
     </dependency>
   </dependencies>
+  
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-common</artifactId>
+        <version>${vers.hdp.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-hdfs</artifactId>
+        <version>${vers.hdp.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-mapreduce-client-app</artifactId>
+        <version>${vers.hdp.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
+        <version>${vers.hdp.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-auth</artifactId>
+        <version>${vers.hdp.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-mapreduce-client-common</artifactId>
+        <version>${vers.hdp.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-mapreduce-client-shuffle</artifactId>
+        <version>${vers.hdp.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-yarn-server-common</artifactId>
+        <version>${vers.hdp.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.zookeeper</groupId>
+        <artifactId>zookeeper</artifactId>
+        <version>${vers.hdp.zookeeper}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-yarn-api</artifactId>
+        <version>${vers.hdp.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-mapreduce-client-core</artifactId>
+        <version>${vers.hdp.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-yarn-common</artifactId>
+        <version>${vers.hdp.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-annotations</artifactId>
+        <version>${vers.hdp.hadoop}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <build>
     <plugins>

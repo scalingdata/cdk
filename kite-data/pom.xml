@@ -29,7 +29,6 @@
     <!-- Avoid circular dependency. CDH-14681
     <module>kite-data-flume</module>
     -->
-    <module>kite-data-hbase</module>
     <module>kite-data-mapreduce</module>
     <module>kite-data-spark</module>
   </modules>
