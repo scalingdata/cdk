@@ -33,7 +33,6 @@
     <module>kite-hadoop-dependencies</module>
     <module>kite-hadoop-compatibility</module>
     <module>kite-data</module>
-    <module>kite-maven-plugin</module>
   </modules>
 
   <name>Kite Development Kit</name>
@@ -250,6 +249,17 @@
   </properties>
 
   <repositories>
+    <repository>
+      <id>com.rocana</id>
+      <name>Rocana</name>
+      <url>http://repository.rocana.com/content/groups/com.scalingdata.development/</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </repository>
     <repository>
       <id>maven-twttr</id>
       <name>Twitter Public Maven Repo</name>
@@ -1353,15 +1363,19 @@
     <profile>
       <id>cdh5</id>
       <activation>
+        <activeByDefault>true</activeByDefault>
         <property>
           <name>hadoop.profile</name>
           <value>cdh5</value>
         </property>
       </activation>
-      <properties>
-        <!-- test cdh5 with the same jars that were produced for default profile -->
-        <maven.main.skip>true</maven.main.skip>
-      </properties>
+      <modules>
+        <!--
+          We don't currently use the maven plugin so we only
+          build it against CDH.
+        -->
+        <module>kite-maven-plugin</module>
+      </modules>
     </profile>
     
     <profile>
