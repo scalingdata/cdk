@@ -304,8 +304,8 @@
                 </goals>
                 <configuration>
                   <file>${project.build.directory}/${project.artifactId}-${project.version}-${proj.classifier}.jar</file>
-                  <repositoryId>com.scalingdata.snapshots</repositoryId>
-                  <url>http://repository.scalingdata.com/content/repositories/com.scalingdata.snapshots/</url>
+                  <repositoryId>${deploy.repositoryId}</repositoryId>
+                  <url>${deploy.url}</url>
                   <groupId>${project.groupId}</groupId>
                   <artifactId>${project.artifactId}</artifactId>
                   <version>${project.version}</version>

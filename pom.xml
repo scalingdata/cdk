@@ -1394,6 +1394,8 @@
         <artifact.hbase-test-deps>kite-hbase-hdp2-test-dependencies</artifact.hbase-test-deps>
     
         <proj.classifier>hdp${hdp2.version}</proj.classifier>
+        <deploy.repositoryId>com.scalingdata.snapshots</deploy.repositoryId>
+        <deploy.url>http://repository.scalingdata.com/content/repositories/com.scalingdata.snapshots/</deploy.url>
 
         <vers.avro-base>${vers.hdp.avro-base}</vers.avro-base> <!-- The version CDH is based on -->
         <vers.avro>${vers.hdp.avro}</vers.avro>
@@ -1802,6 +1804,14 @@
           </dependency>
         </dependencies>
       </dependencyManagement>
+    </profile>
+
+    <profile>
+      <id>hdp2-release</id>
+      <properties>
+        <deploy.repositoryId>com.scalingdata.releases</deploy.repositoryId>
+        <deploy.url>http://repository.scalingdata.com/content/repositories/com.scalingdata.releases/</deploy.url>
+      </properties>
     </profile>
 
     <profile>
