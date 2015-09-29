@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.kitesdk</groupId>
     <artifactId>kite-data</artifactId>
-    <version>1.0.0-cdh5.4.0-rocana1.3.0-rc4</version>
+    <version>1.0.0-cdh5.4.0-rocana1.3.0-rc5</version>
   </parent>
 
   <name>Kite Data Spark Module</name>
