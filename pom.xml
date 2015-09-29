@@ -1809,7 +1809,7 @@
     <profile>
       <id>hdp2-release</id>
       <properties>
-        <deploy.repositoryId>com.scalingdata.release</deploy.repositoryId>
+        <deploy.repositoryId>com.scalingdata.releases</deploy.repositoryId>
         <deploy.url>http://repository.scalingdata.com/content/repositories/com.scalingdata.releases/</deploy.url>
       </properties>
     </profile>
