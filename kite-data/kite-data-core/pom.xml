@@ -119,19 +119,6 @@
   </reporting>
 
   <dependencies>
-    <!-- Hadoop -->
-    <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>${artifact.hadoop-deps}</artifactId>
-      <type>pom</type>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-hadoop-compatibility</artifactId>
-      <classifier>${proj.classifier}</classifier>
-    </dependency>
-
     <!-- Formats -->
     <dependency>
       <groupId>org.apache.avro</groupId>
@@ -170,6 +157,11 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
+      <!--
+        We can't produce a dependency-reduced-pom due to multiple-profile build.
+        Mark guava as optional so projects that depend on us don't pull it in.
+      -->
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
@@ -216,13 +208,48 @@
 
   <profiles>
     <profile>
-      <id>hdp2</id>
+      <id>cdh</id>
       <activation>
+        <activeByDefault>true</activeByDefault>
         <property>
-          <name>hadoop.profile</name>
-          <value>hdp2</value>
+          <name>cdh</name>
         </property>
       </activation>
+      <dependencies>
+        <!-- Hadoop -->
+        <dependency>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>${artifact.hadoop-deps}</artifactId>
+          <type>pom</type>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>kite-hadoop-compatibility</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>hdp</id>
+      <activation>
+        <property>
+          <name>hdp</name>
+        </property>
+      </activation>
+      <dependencies>
+        <!-- Hadoop -->
+        <dependency>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>${artifact.hadoop-deps}</artifactId>
+          <type>pom</type>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>kite-hadoop-compatibility</artifactId>
+          <classifier>${proj.classifier}</classifier>
+        </dependency>
+      </dependencies>
       <build>
         <plugins>
           <plugin>
@@ -237,7 +264,7 @@
                   <goal>install-file</goal>
                 </goals>
                 <configuration>
-                  <file>${project.build.directory}/${project.artifactId}-${project.version}-${proj.classifier}.jar</file>
+                  <file>${project.build.directory}/${project.artifactId}-${project.version}.jar</file>
                   <classifier>${proj.classifier}</classifier>
                   <generatePom>false</generatePom>
                 </configuration>
@@ -256,7 +283,7 @@
                   <goal>deploy-file</goal>
                 </goals>
                 <configuration>
-                  <file>${project.build.directory}/${project.artifactId}-${project.version}-${proj.classifier}.jar</file>
+                  <file>${project.build.directory}/${project.artifactId}-${project.version}.jar</file>
                   <repositoryId>${deploy.repositoryId}</repositoryId>
                   <url>${deploy.url}</url>
                   <groupId>${project.groupId}</groupId>

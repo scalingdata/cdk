@@ -95,55 +95,6 @@
   </reporting>
 
   <dependencies>
-    <!-- Kite -->
-    <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-data-core</artifactId>
-      <classifier>${proj.classifier}</classifier>
-      <exclusions>
-        <!--
-        This is terrible. Needed to avoid pulling in the non-classified
-        transitive dependency
-        -->
-        <exclusion>
-          <groupId>org.kitesdk</groupId>
-          <artifactId>kite-hadoop-compatibility</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-data-hive</artifactId>
-      <optional>true</optional>
-      <classifier>${proj.classifier}</classifier>
-      <exclusions>
-        <!--
-        This is terrible. Needed to avoid pulling in the non-classified
-        transitive dependency
-        -->
-        <exclusion>
-          <groupId>org.kitesdk</groupId>
-          <artifactId>kite-data-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.kitesdk</groupId>
-          <artifactId>kite-hadoop-compatibility</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <!-- Hadoop and HBase -->
-    <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>${artifact.hadoop-deps}</artifactId>
-      <type>pom</type>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-hadoop-compatibility</artifactId>
-      <classifier>${proj.classifier}</classifier>
-    </dependency>
 
     <!-- Formats -->
     <dependency>
@@ -154,6 +105,11 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
+      <!--
+        We can't produce a dependency-reduced-pom due to multiple-profile build.
+        Mark guava as optional so projects that depend on us don't pull it in.
+      -->
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
@@ -175,44 +131,104 @@
       <scope>test</scope>
     </dependency>
 
-    <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>kite-data-core</artifactId>
-      <type>test-jar</type>
-      <scope>test</scope>
-      <exclusions>
-        <!--
-        This is terrible. Needed to avoid pulling in the non-classified
-        transitive dependency
-        -->
-        <exclusion>
-          <groupId>org.kitesdk</groupId>
-          <artifactId>kite-data-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.kitesdk</groupId>
-          <artifactId>kite-hadoop-compatibility</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>org.kitesdk</groupId>
-      <artifactId>${artifact.hadoop-test-deps}</artifactId>
-      <type>pom</type>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <profiles>
     <profile>
-      <id>hdp2</id>
+      <id>cdh</id>
       <activation>
+        <activeByDefault>true</activeByDefault>
         <property>
-          <name>hadoop.profile</name>
-          <value>hdp2</value>
+          <name>cdh</name>
         </property>
       </activation>
+      <dependencies>
+        <!-- Kite -->
+        <dependency>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>kite-data-core</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>kite-data-hive</artifactId>
+          <optional>true</optional>
+        </dependency>
+
+        <!-- Hadoop -->
+        <dependency>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>${artifact.hadoop-deps}</artifactId>
+          <type>pom</type>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>kite-hadoop-compatibility</artifactId>
+        </dependency>
+
+        <!-- Test dependencies -->
+        <dependency>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>${artifact.hadoop-test-deps}</artifactId>
+          <type>pom</type>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>kite-data-core</artifactId>
+          <type>test-jar</type>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>hdp</id>
+      <activation>
+        <property>
+          <name>hdp</name>
+        </property>
+      </activation>
+      <dependencies>
+        <!-- Kite -->
+        <dependency>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>kite-data-core</artifactId>
+          <classifier>${proj.classifier}</classifier>
+        </dependency>
+        <dependency>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>kite-data-hive</artifactId>
+          <classifier>${proj.classifier}</classifier>
+          <optional>true</optional>
+        </dependency>
+
+        <!-- Hadoop -->
+        <dependency>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>${artifact.hadoop-deps}</artifactId>
+          <type>pom</type>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>kite-hadoop-compatibility</artifactId>
+          <classifier>${proj.classifier}</classifier>
+        </dependency>
+
+        <!-- Test dependencies -->
+        <dependency>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>${artifact.hadoop-test-deps}</artifactId>
+          <type>pom</type>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.kitesdk</groupId>
+          <artifactId>kite-data-core</artifactId>
+          <type>test-jar</type>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
       <build>
         <plugins>
           <plugin>
@@ -227,7 +243,7 @@
                   <goal>install-file</goal>
                 </goals>
                 <configuration>
-                  <file>${project.build.directory}/${project.artifactId}-${project.version}-${proj.classifier}.jar</file>
+                  <file>${project.build.directory}/${project.artifactId}-${project.version}.jar</file>
                   <classifier>${proj.classifier}</classifier>
                   <generatePom>false</generatePom>
                 </configuration>
@@ -246,7 +262,7 @@
                   <goal>deploy-file</goal>
                 </goals>
                 <configuration>
-                  <file>${project.build.directory}/${project.artifactId}-${project.version}-${proj.classifier}.jar</file>
+                  <file>${project.build.directory}/${project.artifactId}-${project.version}.jar</file>
                   <repositoryId>${deploy.repositoryId}</repositoryId>
                   <url>${deploy.url}</url>
                   <groupId>${project.groupId}</groupId>

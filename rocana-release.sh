@@ -47,7 +47,7 @@ error "Unable to deploy CDH artifacts to nexus" 1
 
 # Deploy the hdp release to the maven repo
 ${MVN} ${MVN_FLAGS} \
-  -Phdp2,hdp2-release \
+  -Phdp,hdp-release \
   clean \
   deploy ||
 error "Unable to deploy HDP artifacts to nexus" 1

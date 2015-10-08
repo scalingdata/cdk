@@ -171,6 +171,7 @@
     <vers.jcommander>1.35</vers.jcommander>
     <vers.spark>${cdh.spark.version}</vers.spark>
     <vers.snappy>1.0.5.3</vers.snappy>
+    <vers.zookeeper>${cdh.zookeeper.version}</vers.zookeeper>
     
     <!-- HDP Versions -->
     <vers.hdp.avro-base>1.7.6</vers.hdp.avro-base>
@@ -508,30 +509,6 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>${vers.maven-javadoc-plugin}</version>
-          <configuration>
-            <excludePackageNames>org.kitesdk.cli:org.kitesdk.compat:org.kitesdk.data.event,org.kitesdk.data.hbase:org.kitesdk.maven.plugins,org.kitesdk.minicluster.cli,org.kitesdk.morphline.shaded.*,*.spi,*.spi.*,*.impl,org.apache.*</excludePackageNames>
-            <links>
-              <link>http://avro.apache.org/docs/${vers.avro-base}/api/java/</link>
-              <link>http://crunch.apache.org/apidocs/${vers.crunch-base}/</link>
-              <link>http://hadoop.apache.org/docs/r${vers.hadoop-base}/api/</link>
-            </links>
-            <additionalparam>${Xdoclint}</additionalparam>
-            <maxmemory>1g</maxmemory>
-          </configuration>
-          <executions>
-            <execution>
-              <id>package.javadoc</id>
-              <phase>package</phase>
-              <goals>
-                <goal>jar</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-plugin-plugin</artifactId>
           <version>${vers.maven-plugin-plugin}</version>
           <configuration>
@@ -574,19 +551,6 @@
             <outputEncoding>UTF-8</outputEncoding>
             <skipDeploy>true</skipDeploy> <!-- deploy using github plugin -->
           </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-source-plugin</artifactId>
-          <version>${vers.maven-source-plugin}</version>
-          <executions>
-            <execution>
-              <id>attach-sources</id>
-              <goals>
-                <goal>jar-no-fork</goal>
-              </goals>
-            </execution>
-          </executions>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -687,32 +651,6 @@
             <goals>deploy</goals>
             <tagNameFormat>release-@{project.version}</tagNameFormat>
           </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-shade-plugin</artifactId>
-          <version>${vers.maven-shade-plugin}</version>
-          <executions>
-            <execution>
-              <phase>package</phase>
-              <goals>
-                <goal>shade</goal>
-              </goals>
-              <configuration>
-                <artifactSet>
-                  <includes>
-                    <include>com.google.guava:guava</include>
-                  </includes>
-                </artifactSet>
-                <relocations>
-                  <relocation>
-                    <pattern>com.google.common</pattern>
-                    <shadedPattern>org.kitesdk.shaded.com.google.common</shadedPattern>
-                  </relocation>
-                </relocations>
-              </configuration>
-            </execution>
-          </executions>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -822,77 +760,9 @@
     </plugins>
   </reporting>
 
+
   <dependencyManagement>
     <dependencies>
-      <!-- Kite modules -->
-      <dependency>
-        <groupId>org.kitesdk</groupId>
-        <artifactId>kite-data-core</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kitesdk</groupId>
-        <artifactId>kite-data-crunch</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kitesdk</groupId>
-        <artifactId>kite-data-hive</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kitesdk</groupId>
-        <artifactId>kite-data-mapreduce</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kitesdk</groupId>
-        <artifactId>kite-data-spark</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kitesdk</groupId>
-        <artifactId>kite-hadoop-compatibility</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <!-- With classifier -->
-      <dependency>
-        <groupId>org.kitesdk</groupId>
-        <artifactId>kite-data-core</artifactId>
-        <version>${project.version}</version>
-        <classifier>${proj.classifier}</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kitesdk</groupId>
-        <artifactId>kite-data-crunch</artifactId>
-        <version>${project.version}</version>
-        <classifier>${proj.classifier}</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kitesdk</groupId>
-        <artifactId>kite-data-hive</artifactId>
-        <version>${project.version}</version>
-        <classifier>${proj.classifier}</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kitesdk</groupId>
-        <artifactId>kite-data-mapreduce</artifactId>
-        <version>${project.version}</version>
-        <classifier>${proj.classifier}</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kitesdk</groupId>
-        <artifactId>kite-data-spark</artifactId>
-        <version>${project.version}</version>
-        <classifier>${proj.classifier}</classifier>
-      </dependency>
-      <dependency>
-        <groupId>org.kitesdk</groupId>
-        <artifactId>kite-hadoop-compatibility</artifactId>
-        <version>${project.version}</version>
-        <classifier>${proj.classifier}</classifier>
-      </dependency>
 
       <!-- Test jars -->
       <dependency>
@@ -910,35 +780,6 @@
         <scope>test</scope>
       </dependency>
       
-      <!-- Hadoop dependencies -->
-      <dependency>
-        <groupId>org.kitesdk</groupId>
-        <artifactId>${artifact.hadoop-deps}</artifactId>
-        <version>${project.version}</version>
-        <type>pom</type>
-      </dependency>
-      <dependency>
-        <groupId>org.kitesdk</groupId>
-        <artifactId>${artifact.hadoop-test-deps}</artifactId>
-        <version>${project.version}</version>
-        <type>pom</type>
-        <scope>test</scope>
-      </dependency>
-
-      <!-- HBase dependencies -->
-      <dependency>
-        <groupId>org.kitesdk</groupId>
-        <artifactId>${artifact.hbase-deps}</artifactId>
-        <version>${project.version}</version>
-        <type>pom</type>
-      </dependency>
-      <dependency>
-        <groupId>org.kitesdk</groupId>
-        <artifactId>${artifact.hbase-test-deps}</artifactId>
-        <version>${project.version}</version>
-        <type>pom</type>
-        <scope>test</scope>
-      </dependency>
 
       <!-- Hive dependencies -->
       <dependency>
@@ -1267,6 +1108,267 @@
         <artifactId>snappy-java</artifactId>
         <version>${vers.snappy}</version>
       </dependency>
+
+      <!-- Hadoop -->
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-annotations</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-auth</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-aws</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-client</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-common</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-common</artifactId>
+        <version>${vers.hadoop}</version>
+        <type>test-jar</type>
+        <classifier>tests</classifier>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-hdfs</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-hdfs</artifactId>
+        <version>${vers.hadoop}</version>
+        <type>test-jar</type>
+        <classifier>tests</classifier>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-mapreduce-client-app</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-mapreduce-client-common</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-mapreduce-client-core</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-mapreduce-client-hs</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
+        <version>${vers.hadoop}</version>
+        <type>test-jar</type>
+        <classifier>tests</classifier>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-mapreduce-client-shuffle</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-minicluster</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-yarn-api</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-yarn-client</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-yarn-common</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-yarn-server-applicationhistoryservice</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-yarn-server-common</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-yarn-server-nodemanager</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-yarn-server-resourcemanager</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-yarn-server-tests</artifactId>
+        <version>${vers.hadoop}</version>
+        <type>test-jar</type>
+        <classifier>tests</classifier>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-yarn-server-web-proxy</artifactId>
+        <version>${vers.hadoop}</version>
+      </dependency>
+
+      <!-- HBase -->
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-annotations</artifactId>
+        <version>${vers.hbase}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-annotations</artifactId>
+        <version>${vers.hbase}</version>
+        <type>test-jar</type>
+        <classifier>tests</classifier>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-client</artifactId>
+        <version>${vers.hbase}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-common</artifactId>
+        <version>${vers.hbase}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-common</artifactId>
+        <version>${vers.hbase}</version>
+        <type>test-jar</type>
+        <classifier>tests</classifier>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-hadoop-compat</artifactId>
+        <version>${vers.hbase}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-hadoop-compat</artifactId>
+        <version>${vers.hbase}</version>
+        <type>test-jar</type>
+        <classifier>tests</classifier>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-hadoop2-compat</artifactId>
+        <version>${vers.hbase}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-hadoop2-compat</artifactId>
+        <version>${vers.hbase}</version>
+        <type>test-jar</type>
+        <classifier>tests</classifier>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-prefix-tree</artifactId>
+        <version>${vers.hbase}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-protocol</artifactId>
+        <version>${vers.hbase}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-server</artifactId>
+        <version>${vers.hbase}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-server</artifactId>
+        <version>${vers.hbase}</version>
+        <type>test-jar</type>
+        <classifier>tests</classifier>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hbase</groupId>
+        <artifactId>hbase-testing-util</artifactId>
+        <version>${vers.hbase}</version>
+      </dependency>
+
+      <!-- Hive -->
+      <dependency>
+        <groupId>org.apache.hive</groupId>
+        <artifactId>hive-common</artifactId>
+        <version>${vers.hive}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hive</groupId>
+        <artifactId>hive-metastore</artifactId>
+        <version>${vers.hive}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hive</groupId>
+        <artifactId>hive-service</artifactId>
+        <version>${vers.hive}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hive</groupId>
+        <artifactId>hive-shims</artifactId>
+        <version>${vers.hive}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hive.shims</groupId>
+        <artifactId>hive-shims-0.23</artifactId>
+        <version>${vers.hive}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hive.shims</groupId>
+        <artifactId>hive-shims-common</artifactId>
+        <version>${vers.hive}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hive.shims</groupId>
+        <artifactId>hive-shims-scheduler</artifactId>
+        <version>${vers.hive}</version>
+      </dependency>
+
+      <!-- ZooKeeper -->
+      <dependency>
+        <groupId>org.apache.zookeeper</groupId>
+        <artifactId>zookeeper</artifactId>
+        <version>${vers.zookeeper}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -1361,12 +1463,11 @@
     </profile>
 
     <profile>
-      <id>cdh5</id>
+      <id>cdh</id>
       <activation>
         <activeByDefault>true</activeByDefault>
         <property>
-          <name>hadoop.profile</name>
-          <value>cdh5</value>
+          <name>cdh</name>
         </property>
       </activation>
       <modules>
@@ -1376,14 +1477,148 @@
         -->
         <module>kite-maven-plugin</module>
       </modules>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-shade-plugin</artifactId>
+              <version>${vers.maven-shade-plugin}</version>
+              <executions>
+                <execution>
+                  <phase>package</phase>
+                  <goals>
+                    <goal>shade</goal>
+                  </goals>
+                  <configuration>
+                    <artifactSet>
+                      <includes>
+                        <include>com.google.guava:guava</include>
+                      </includes>
+                    </artifactSet>
+                    <relocations>
+                      <relocation>
+                        <pattern>com.google.common</pattern>
+                        <shadedPattern>org.kitesdk.shaded.com.google.common</shadedPattern>
+                      </relocation>
+                    </relocations>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-source-plugin</artifactId>
+              <version>${vers.maven-source-plugin}</version>
+              <executions>
+                <execution>
+                  <id>attach-sources</id>
+                  <goals>
+                    <goal>jar-no-fork</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-javadoc-plugin</artifactId>
+              <version>${vers.maven-javadoc-plugin}</version>
+              <configuration>
+                <excludePackageNames>org.kitesdk.cli:org.kitesdk.compat:org.kitesdk.data.event,org.kitesdk.data.hbase:org.kitesdk.maven.plugins,org.kitesdk.minicluster.cli,org.kitesdk.morphline.shaded.*,*.spi,*.spi.*,*.impl,org.apache.*</excludePackageNames>
+                <links>
+                  <link>http://avro.apache.org/docs/${vers.avro-base}/api/java/</link>
+                  <link>http://crunch.apache.org/apidocs/${vers.crunch-base}/</link>
+                  <link>http://hadoop.apache.org/docs/r${vers.hadoop-base}/api/</link>
+                </links>
+                <additionalparam>${Xdoclint}</additionalparam>
+                <maxmemory>1g</maxmemory>
+              </configuration>
+              <executions>
+                <execution>
+                  <id>package.javadoc</id>
+                  <phase>package</phase>
+                  <goals>
+                    <goal>jar</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+      <dependencyManagement>
+        <dependencies>
+          <!-- Kite modules -->
+          <dependency>
+            <groupId>org.kitesdk</groupId>
+            <artifactId>kite-data-core</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.kitesdk</groupId>
+            <artifactId>kite-data-crunch</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.kitesdk</groupId>
+            <artifactId>kite-data-hive</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.kitesdk</groupId>
+            <artifactId>kite-data-mapreduce</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.kitesdk</groupId>
+            <artifactId>kite-data-spark</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.kitesdk</groupId>
+            <artifactId>kite-hadoop-compatibility</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+
+          <!-- Hadoop dependency aggregators -->
+          <dependency>
+            <groupId>org.kitesdk</groupId>
+            <artifactId>kite-hadoop-cdh5-dependencies</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+          </dependency>
+          <dependency>
+            <groupId>org.kitesdk</groupId>
+            <artifactId>kite-hadoop-cdh5-test-dependencies</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+            <scope>test</scope>
+          </dependency>
+
+          <!-- HBase dependency aggregators -->
+          <dependency>
+            <groupId>org.kitesdk</groupId>
+            <artifactId>kite-hbase-cdh5-dependencies</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+          </dependency>
+          <dependency>
+            <groupId>org.kitesdk</groupId>
+            <artifactId>kite-hbase-cdh5-test-dependencies</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+            <scope>test</scope>
+          </dependency>
+        </dependencies>
+      </dependencyManagement>
     </profile>
     
     <profile>
-      <id>hdp2</id>
+      <id>hdp</id>
       <activation>
         <property>
-          <name>hadoop.profile</name>
-          <value>hdp2</value>
+          <name>hdp</name>
         </property>
       </activation>
       <properties>
@@ -1393,9 +1628,10 @@
         <artifact.hbase-deps>kite-hbase-hdp2-dependencies</artifact.hbase-deps>
         <artifact.hbase-test-deps>kite-hbase-hdp2-test-dependencies</artifact.hbase-test-deps>
     
-        <proj.classifier>hdp${hdp2.version}</proj.classifier>
         <deploy.repositoryId>com.scalingdata.snapshots</deploy.repositoryId>
         <deploy.url>http://repository.scalingdata.com/content/repositories/com.scalingdata.snapshots/</deploy.url>
+
+        <proj.classifier>hdp${hdp2.version}</proj.classifier>
 
         <vers.avro-base>${vers.hdp.avro-base}</vers.avro-base> <!-- The version CDH is based on -->
         <vers.avro>${vers.hdp.avro}</vers.avro>
@@ -1436,6 +1672,7 @@
         <vers.jcommander>${vers.hdp.jcommander}</vers.jcommander>
         <vers.spark>${vers.hdp.spark}</vers.spark>
         <vers.snappy>${vers.hdp.snappy}</vers.snappy>
+        <vers.zookeeper>${vers.hdp.zookeeper}</vers.zookeeper>
       </properties>
       <build>
         <pluginManagement>
@@ -1462,8 +1699,8 @@
                         <shadedPattern>org.kitesdk.shaded.com.google.common</shadedPattern>
                       </relocation>
                     </relocations>
-                    <shadedArtifactAttached>true</shadedArtifactAttached>
                     <shadedClassifierName>${proj.classifier}</shadedClassifierName>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
                   </configuration>
                 </execution>
               </executions>
@@ -1507,6 +1744,7 @@
       </build>
       <dependencyManagement>
         <dependencies>
+          <!-- Kite with classifier -->
           <dependency>
             <groupId>org.kitesdk</groupId>
             <artifactId>kite-data-core</artifactId>
@@ -1543,271 +1781,42 @@
             <version>${project.version}</version>
             <classifier>${proj.classifier}</classifier>
           </dependency>
+
+          <!-- Hadoop dependency aggregators -->
           <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-annotations</artifactId>
-            <version>${vers.hdp.hadoop}</version>
+            <groupId>org.kitesdk</groupId>
+            <artifactId>kite-hadoop-hdp2-dependencies</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
           </dependency>
           <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-auth</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-aws</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-client</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-common</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-common</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-            <type>test-jar</type>
-            <classifier>tests</classifier>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-hdfs</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-hdfs</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-            <type>test-jar</type>
-            <classifier>tests</classifier>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-mapreduce-client-app</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-mapreduce-client-common</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-mapreduce-client-core</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-mapreduce-client-hs</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-mapreduce-client-jobclient</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-            <type>test-jar</type>
-            <classifier>tests</classifier>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-mapreduce-client-shuffle</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-minicluster</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-yarn-api</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-yarn-client</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-yarn-common</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-yarn-server-applicationhistoryservice</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-yarn-server-common</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-yarn-server-nodemanager</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-yarn-server-resourcemanager</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-yarn-server-tests</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-            <type>test-jar</type>
-            <classifier>tests</classifier>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-yarn-server-web-proxy</artifactId>
-            <version>${vers.hdp.hadoop}</version>
-          </dependency>
-          
-          <!-- HBase -->
-          <dependency>
-            <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase-annotations</artifactId>
-            <version>${vers.hdp.hbase}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase-annotations</artifactId>
-            <version>${vers.hdp.hbase}</version>
-            <type>test-jar</type>
-            <classifier>tests</classifier>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase-client</artifactId>
-            <version>${vers.hdp.hbase}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase-common</artifactId>
-            <version>${vers.hdp.hbase}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase-common</artifactId>
-            <version>${vers.hdp.hbase}</version>
-            <type>test-jar</type>
-            <classifier>tests</classifier>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase-hadoop-compat</artifactId>
-            <version>${vers.hdp.hbase}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase-hadoop-compat</artifactId>
-            <version>${vers.hdp.hbase}</version>
-            <type>test-jar</type>
-            <classifier>tests</classifier>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase-hadoop2-compat</artifactId>
-            <version>${vers.hdp.hbase}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase-hadoop2-compat</artifactId>
-            <version>${vers.hdp.hbase}</version>
-            <type>test-jar</type>
-            <classifier>tests</classifier>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase-prefix-tree</artifactId>
-            <version>${vers.hdp.hbase}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase-protocol</artifactId>
-            <version>${vers.hdp.hbase}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase-server</artifactId>
-            <version>${vers.hdp.hbase}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase-server</artifactId>
-            <version>${vers.hdp.hbase}</version>
-            <type>test-jar</type>
-            <classifier>tests</classifier>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase-testing-util</artifactId>
-            <version>${vers.hdp.hbase}</version>
-          </dependency>
-          
-          <!-- Hive -->
-          <dependency>
-            <groupId>org.apache.hive</groupId>
-            <artifactId>hive-common</artifactId>
-            <version>${vers.hdp.hive}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hive</groupId>
-            <artifactId>hive-metastore</artifactId>
-            <version>${vers.hdp.hive}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hive</groupId>
-            <artifactId>hive-service</artifactId>
-            <version>${vers.hdp.hive}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hive</groupId>
-            <artifactId>hive-shims</artifactId>
-            <version>${vers.hdp.hive}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hive.shims</groupId>
-            <artifactId>hive-shims-0.23</artifactId>
-            <version>${vers.hdp.hive}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hive.shims</groupId>
-            <artifactId>hive-shims-common</artifactId>
-            <version>${vers.hdp.hive}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.hive.shims</groupId>
-            <artifactId>hive-shims-scheduler</artifactId>
-            <version>${vers.hdp.hive}</version>
+            <groupId>org.kitesdk</groupId>
+            <artifactId>kite-hadoop-hdp2-test-dependencies</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+            <scope>test</scope>
           </dependency>
 
-          <!-- ZooKeeper -->
+          <!-- HBase dependency aggregators -->
           <dependency>
-            <groupId>org.apache.zookeeper</groupId>
-            <artifactId>zookeeper</artifactId>
-            <version>${vers.hdp.zookeeper}</version>
+            <groupId>org.kitesdk</groupId>
+            <artifactId>kite-hbase-hdp2-dependencies</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+          </dependency>
+          <dependency>
+            <groupId>org.kitesdk</groupId>
+            <artifactId>kite-hbase-hdp2-test-dependencies</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+            <scope>test</scope>
           </dependency>
         </dependencies>
       </dependencyManagement>
     </profile>
 
     <profile>
-      <id>hdp2-release</id>
+      <id>hdp-release</id>
       <properties>
         <deploy.repositoryId>com.scalingdata.releases</deploy.repositoryId>
         <deploy.url>http://repository.scalingdata.com/content/repositories/com.scalingdata.releases/</deploy.url>
