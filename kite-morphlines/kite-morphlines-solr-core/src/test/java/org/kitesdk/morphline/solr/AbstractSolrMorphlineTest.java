@@ -31,8 +31,8 @@ import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.solr.SolrTestCaseJ4;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.impl.XMLResponseParser;
@@ -63,7 +63,7 @@ public class AbstractSolrMorphlineTest extends SolrTestCaseJ4 {
 
   protected Collector collector;
   protected Command morphline;
-  protected SolrServer solrServer;
+  protected SolrClient solrServer;
   protected DocumentLoader testServer;
   
   protected static final boolean TEST_WITH_EMBEDDED_SOLR_SERVER = true;
@@ -106,7 +106,7 @@ public class AbstractSolrMorphlineTest extends SolrTestCaseJ4 {
       ((HttpSolrServer)solrServer).setParser(new XMLResponseParser());
     } else {
       if (TEST_WITH_EMBEDDED_SOLR_SERVER) {
-        solrServer = new TestEmbeddedSolrServer(h.getCoreContainer(), "");
+        solrServer = new TestEmbeddedSolrServer(h.getCoreContainer(), "collection1");
       } else {
         throw new RuntimeException("Not yet implemented");
         //solrServer = new TestSolrServer(getSolrServer());
@@ -208,7 +208,7 @@ public class AbstractSolrMorphlineTest extends SolrTestCaseJ4 {
 
   private void deleteAllDocuments() throws SolrServerException, IOException {
     collector.reset();
-    SolrServer s = solrServer;
+    SolrClient s = solrServer;
     s.deleteByQuery("*:*"); // delete everything!
     s.commit();
   }

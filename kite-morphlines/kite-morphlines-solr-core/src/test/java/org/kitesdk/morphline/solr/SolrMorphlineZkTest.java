@@ -24,6 +24,7 @@ import org.apache.lucene.util.LuceneTestCase.SuppressCodecs;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
+import org.junit.Test;
 import org.kitesdk.morphline.api.Record;
 import org.kitesdk.morphline.base.Fields;
 import org.kitesdk.morphline.base.Notifications;
@@ -43,7 +44,7 @@ import com.carrotsearch.randomizedtesting.annotations.ThreadLeakZombies.Conseque
 @SuppressCodecs({"Lucene3x", "Lucene40"})
 public class SolrMorphlineZkTest extends AbstractSolrMorphlineZkTest {
     
-  @Override
+  @Test
   public void doTest() throws Exception {
     
     waitForRecoveriesToFinish(false);

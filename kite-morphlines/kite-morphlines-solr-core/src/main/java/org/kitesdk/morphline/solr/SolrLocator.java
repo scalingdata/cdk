@@ -20,8 +20,10 @@ import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
+import org.apache.solr.client.solrj.impl.CloudSolrClient;
 import org.apache.solr.client.solrj.impl.CloudSolrServer;
 import org.apache.solr.common.cloud.SolrZkClient;
 import org.apache.solr.core.CoreContainer;
@@ -80,12 +82,12 @@ public class SolrLocator {
     configs.validateArguments(config);
   }
   
-  public SolrServer getSolrServer() {
+  public SolrClient getSolrServer() {
     if (zkHost != null && zkHost.length() > 0) {
       if (collectionName == null || collectionName.length() == 0) {
         throw new MorphlineCompilationException("Parameter 'zkHost' requires that you also pass parameter 'collection'", config);
       }
-      CloudSolrServer cloudSolrServer = new CloudSolrServer(zkHost);
+      CloudSolrClient cloudSolrServer = new CloudSolrClient(zkHost);
       cloudSolrServer.setDefaultCollection(collectionName);
       return cloudSolrServer;
     } else {
@@ -100,7 +102,7 @@ public class SolrLocator {
       }
       int solrServerNumThreads = 2;
       int solrServerQueueLength = solrServerNumThreads;
-      SolrServer server = new SafeConcurrentUpdateSolrServer(solrUrl, solrServerQueueLength, solrServerNumThreads);
+      SolrClient server = new SafeConcurrentUpdateSolrServer(solrUrl, solrServerQueueLength, solrServerNumThreads);
       return server;
     }
   }
@@ -113,10 +115,10 @@ public class SolrLocator {
       }
     }
     
-    SolrServer solrServer = getSolrServer();
-    if (solrServer instanceof CloudSolrServer) {
+    SolrClient solrServer = getSolrServer();
+    if (solrServer instanceof CloudSolrClient) {
       try {
-        ((CloudSolrServer)solrServer).setIdField(getIndexSchema().getUniqueKeyField().getName());
+        ((CloudSolrClient)solrServer).setIdField(getIndexSchema().getUniqueKeyField().getName());
       } catch (RuntimeException e) {
         try {
           solrServer.shutdown(); // release resources

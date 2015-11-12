@@ -68,17 +68,17 @@
         <filter class="solr.DelimitedPayloadTokenFilterFactory" encoder="float"/>
       </analyzer>
     </fieldType>
-    <fieldType name="pdate" class="solr.DateField" sortMissingLast="true"/>
-    <fieldType name="pdouble" class="solr.DoubleField"/>
-    <fieldType name="pfloat" class="solr.FloatField"/>
+    <fieldType name="pdate" class="solr.TrieDateField" sortMissingLast="true"/>
+    <fieldType name="pdouble" class="solr.TrieDoubleField"/>
+    <fieldType name="pfloat" class="solr.TrieFloatField"/>
     <fieldType name="phonetic" class="solr.TextField" indexed="true" stored="false">
       <analyzer>
         <tokenizer class="solr.StandardTokenizerFactory"/>
         <filter class="solr.DoubleMetaphoneFilterFactory" inject="false"/>
       </analyzer>
     </fieldType>
-    <fieldType name="pint" class="solr.IntField"/>
-    <fieldType name="plong" class="solr.LongField"/>
+    <fieldType name="pint" class="solr.TrieIntField"/>
+    <fieldType name="plong" class="solr.TrieLongField"/>
     <fieldType name="point" class="solr.PointType" dimension="2" subFieldSuffix="_d"/>
     <fieldType name="random" class="solr.RandomSortField" indexed="true"/>
     <fieldType name="string" class="solr.StrField" sortMissingLast="true"/>

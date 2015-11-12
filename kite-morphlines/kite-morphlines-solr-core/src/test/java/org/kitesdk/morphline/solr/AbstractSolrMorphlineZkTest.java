@@ -59,9 +59,8 @@ public abstract class AbstractSolrMorphlineZkTest extends AbstractFullDistribZkT
   }
   
   public AbstractSolrMorphlineZkTest() {
-    fixShardCount = true;
     sliceCount = 3;
-    shardCount = 3;
+    fixShardCount(3);
   }
   
   @BeforeClass
@@ -88,13 +87,7 @@ public abstract class AbstractSolrMorphlineZkTest extends AbstractFullDistribZkT
     System.clearProperty("host");
     System.clearProperty("numShards");
   }
-  
-  @Test
-  @Override
-  public void testDistribSearch() throws Exception {
-    super.testDistribSearch();
-  }
-  
+
   @Override
   protected void commit() throws Exception {
     Notifications.notifyCommitTransaction(morphline);    

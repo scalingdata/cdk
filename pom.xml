@@ -33,6 +33,7 @@
     <module>kite-hadoop-dependencies</module>
     <module>kite-hadoop-compatibility</module>
     <module>kite-data</module>
+    <module>kite-morphlines</module>
   </modules>
 
   <name>Kite Development Kit</name>
@@ -162,8 +163,8 @@
     <vers.slf4j>${cdh.slf4j.version}</vers.slf4j>
     <vers.codahale.metrics>3.0.2</vers.codahale.metrics>
     <vers.typesafe.config>1.0.2</vers.typesafe.config>
-    <vers.solr>${cdh.solr.version}</vers.solr>
-    <solr.expected.version>${cdh.solr.version}</solr.expected.version> <!-- sanity check to verify we actually run against the expected version rather than some outdated version -->
+    <vers.solr>${vers.hdp.solr}</vers.solr>
+    <solr.expected.version>${vers.hdp.solr}</solr.expected.version> <!-- sanity check to verify we actually run against the expected version rather than some outdated version -->
     <vers.tika>${cdh.tika.version}</vers.tika>
     <vers.jackson>2.3.1</vers.jackson>
     <vers.opencsv>2.3</vers.opencsv>
@@ -190,6 +191,7 @@
     <vers.hdp.hadoop>2.7.1.2.3.0.0-2557</vers.hdp.hadoop>
     <vers.hdp.hbase>1.1.1.2.3.0.0-2557</vers.hdp.hbase>
     <vers.hdp.hive>1.2.1.2.3.0.0-2557</vers.hdp.hive>
+    <vers.hdp.httpclient>4.4.1</vers.hdp.httpclient>
     <vers.hdp.jetty>8.1.14.v20131031</vers.hdp.jetty>
     <vers.hdp.jexl>2.1.1</vers.hdp.jexl>
     <vers.hdp.compress>1.4.1</vers.hdp.compress>
@@ -216,6 +218,22 @@
     <vers.hdp.snappy>1.0.5.3</vers.hdp.snappy>
     <vers.hdp.jetty>6.1.26.hwx</vers.hdp.jetty>
     <vers.hdp.zookeeper>3.4.6.2.3.0.0-2557</vers.hdp.zookeeper>
+
+    <cdh.solr.version>${vers.hdp.solr}</cdh.solr.version>
+    <cdh.httpcomponents.version>${vers.hdp.httpclient}</cdh.httpcomponents.version>
+    <cdh.httpcomponents.core.version>${vers.hdp.httpclient}</cdh.httpcomponents.core.version>
+    <!--
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>${cdh.httpcomponents.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcore</artifactId>
+      <version>${cdh.httpcomponents.core.version}</version>
+    </dependency>
+    -->
 
     <!-- Plugin versions -->
     <vers.doxia-module-markdown>1.4</vers.doxia-module-markdown>

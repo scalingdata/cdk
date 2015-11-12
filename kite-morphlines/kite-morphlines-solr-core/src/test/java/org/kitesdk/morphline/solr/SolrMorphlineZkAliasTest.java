@@ -30,6 +30,7 @@ import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.params.CollectionParams.CollectionAction;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.NamedList;
+import org.junit.Test;
 import org.kitesdk.morphline.api.Record;
 import org.kitesdk.morphline.base.Fields;
 import org.kitesdk.morphline.base.Notifications;
@@ -49,7 +50,7 @@ import com.carrotsearch.randomizedtesting.annotations.ThreadLeakZombies.Conseque
 @SuppressCodecs({"Lucene3x", "Lucene40"})
 public class SolrMorphlineZkAliasTest extends AbstractSolrMorphlineZkTest {
     
-  @Override
+  @Test
   public void doTest() throws Exception {
     
     waitForRecoveriesToFinish(false);

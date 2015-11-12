@@ -18,10 +18,15 @@ package org.kitesdk.morphline.solr;
 
 import static org.junit.Assert.assertTrue;
 
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.junit.Test;
 import org.kitesdk.morphline.api.MorphlineContext;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /** Verify that the correct Solr Server is selected based on parameters given the locator */
 public class SolrLocatorTest {
@@ -30,9 +35,11 @@ public class SolrLocatorTest {
   public void testSelectsEmbeddedSolrServer() {
     //Solr locator should select EmbeddedSolrServer only solrHome is specified
     SolrLocator solrLocator = new SolrLocator(new MorphlineContext.Builder().build());
-    solrLocator.setSolrHomeDir("ignored");
+    solrLocator.setCollectionName("collection1");
+    solrLocator.setSolrHomeDir("target/test-classes/solr");
+
     SolrServerDocumentLoader documentLoader = (SolrServerDocumentLoader)solrLocator.getLoader();
-    SolrServer solrServer = documentLoader.getSolrServer();
+    SolrClient solrServer = documentLoader.getSolrServer();
     assertTrue(solrServer instanceof EmbeddedSolrServer);
   }
 

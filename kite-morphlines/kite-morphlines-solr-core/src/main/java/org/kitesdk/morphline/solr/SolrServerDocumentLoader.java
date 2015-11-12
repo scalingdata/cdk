@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CloudSolrServer;
@@ -38,14 +39,14 @@ import com.google.common.base.Preconditions;
  */
 public class SolrServerDocumentLoader implements DocumentLoader {
 
-  private final SolrServer server; // proxy to local or remote solr server
+  private final SolrClient server; // proxy to local or remote solr server
   private long numSentItems = 0; // number of requests sent in the current transaction
   private final int batchSize;
   private final List batch = new ArrayList();
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SolrServerDocumentLoader.class);
 
-  public SolrServerDocumentLoader(SolrServer server, int batchSize) {
+  public SolrServerDocumentLoader(SolrClient server, int batchSize) {
     if (server == null) {
       throw new IllegalArgumentException("solr server must not be null");
     }
@@ -184,7 +185,7 @@ public class SolrServerDocumentLoader implements DocumentLoader {
     return server.ping();
   }
 
-  public SolrServer getSolrServer() {
+  public SolrClient getSolrServer() {
     return server;
   }
   

@@ -31,6 +31,7 @@ import org.apache.lucene.util.LuceneTestCase.SuppressCodecs;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
+import org.junit.Test;
 import org.kitesdk.morphline.api.Record;
 import org.kitesdk.morphline.base.Fields;
 import org.kitesdk.morphline.base.Notifications;
@@ -53,7 +54,7 @@ import com.google.common.io.Files;
 @SuppressCodecs({"Lucene3x", "Lucene40"})
 public class SolrMorphlineZkAvroTest extends AbstractSolrMorphlineZkTest {
   
-  @Override
+  @Test
   public void doTest() throws Exception {
     Joiner joiner = Joiner.on(File.separator);
     File file = new File(joiner.join(RESOURCES_DIR, "test-documents", "sample-statuses-20120906-141433-medium.avro"));
