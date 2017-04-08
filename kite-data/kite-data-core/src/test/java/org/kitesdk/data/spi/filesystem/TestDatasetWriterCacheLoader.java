@@ -15,6 +15,7 @@
  */
 package org.kitesdk.data.spi.filesystem;
 
+import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import java.io.IOException;
 import junit.framework.Assert;
@@ -66,7 +67,7 @@ public class TestDatasetWriterCacheLoader {
   @Test
   public void testInitializeAfterParitionAddedCallback() throws Exception {
     PartitionedDatasetWriter.DatasetWriterCacheLoader<Object> loader
-      = new PartitionedDatasetWriter.DatasetWriterCacheLoader<Object>(view);
+      = new PartitionedDatasetWriter.DatasetWriterCacheLoader<Object>(view, Sets.<String>newHashSet());
 
     StorageKey key = new StorageKey.Builder(partitionStrategy)
       .add("username", "test1")
