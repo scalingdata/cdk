@@ -15,12 +15,16 @@
  */
 package org.kitesdk.data.spi.filesystem;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.kitesdk.data.DatasetDescriptor;
 import org.kitesdk.data.DatasetWriter;
 import org.kitesdk.data.Format;
 import org.kitesdk.data.Formats;
 import org.kitesdk.data.PartitionStrategy;
+import org.kitesdk.data.PartitionUpdateListener;
+import org.kitesdk.data.PartitionUpdateReporter;
 import org.kitesdk.data.Syncable;
 import org.kitesdk.data.ValidationException;
 import org.kitesdk.data.spi.AbstractDatasetWriter;
@@ -38,13 +42,15 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 abstract class PartitionedDatasetWriter<E, W extends FileSystemWriter<E>> extends
-    AbstractDatasetWriter<E> {
+    AbstractDatasetWriter<E> implements PartitionUpdateReporter {
 
   private static final Logger LOG = LoggerFactory
     .getLogger(PartitionedDatasetWriter.class);
@@ -60,6 +66,9 @@ abstract class PartitionedDatasetWriter<E, W extends FileSystemWriter<E>> extend
   private final StorageKey reusedKey;
   private final EntityAccessor<E> accessor;
   private final Map<String, Object> provided;
+
+  private final List<PartitionUpdateListener> listeners;
+  protected final Set<String> pDSWUpdatedPartitions;
 
   protected ReaderWriterState state;
 
@@ -107,6 +116,13 @@ abstract class PartitionedDatasetWriter<E, W extends FileSystemWriter<E>> extend
     this.reusedKey = new StorageKey(partitionStrategy);
     this.accessor = view.getAccessor();
     this.provided = view.getProvidedValues();
+    this.listeners = Lists.newArrayList();
+    this.pDSWUpdatedPartitions = Sets.newHashSet();
+  }
+
+  @Override
+  public void register(PartitionUpdateListener listener) {
+    listeners.add(listener);
   }
 
   @Override
@@ -167,6 +183,11 @@ abstract class PartitionedDatasetWriter<E, W extends FileSystemWriter<E>> extend
         LOG.debug("Closing partition writer:{}", writer);
         writer.close();
       }
+      for (PartitionUpdateListener listener : listeners) {
+        for (String partition : pDSWUpdatedPartitions) {
+          listener.partitionUpdated(partition);
+        }
+      }
 
       state = ReaderWriterState.CLOSED;
     }
@@ -193,11 +214,13 @@ abstract class PartitionedDatasetWriter<E, W extends FileSystemWriter<E>> extend
 
     private final FileSystemView<E> view;
     private final PathConversion convert;
+    private final Set<String> dSWCLUpdatedPartitions;
 
-    public DatasetWriterCacheLoader(FileSystemView<E> view) {
+    public DatasetWriterCacheLoader(FileSystemView<E> view, Set<String> updatedPartitions) {
       this.view = view;
       this.convert = new PathConversion(
           view.getDataset().getDescriptor().getSchema());
+      this.dSWCLUpdatedPartitions = updatedPartitions;
     }
 
     @Override
@@ -217,6 +240,7 @@ abstract class PartitionedDatasetWriter<E, W extends FileSystemWriter<E>> extend
         listener.partitionAdded(
             dataset.getNamespace(), dataset.getName(), partition.toString());
       }
+      dSWCLUpdatedPartitions.add(partition.toString());
 
       // initialize the writer after calling the listener
       // this lets the listener decide if and how to create the
@@ -233,11 +257,13 @@ abstract class PartitionedDatasetWriter<E, W extends FileSystemWriter<E>> extend
 
     private final FileSystemView<E> view;
     private final PathConversion convert;
+    private final Set<String> iDSWCLUpdatedPartitions;
 
-    public IncrementalDatasetWriterCacheLoader(FileSystemView<E> view) {
+    public IncrementalDatasetWriterCacheLoader(FileSystemView<E> view, Set<String> updatedPartitions) {
       this.view = view;
       this.convert = new PathConversion(
           view.getDataset().getDescriptor().getSchema());
+      this.iDSWCLUpdatedPartitions = updatedPartitions;
     }
 
     @Override
@@ -260,6 +286,7 @@ abstract class PartitionedDatasetWriter<E, W extends FileSystemWriter<E>> extend
         listener.partitionAdded(
             dataset.getNamespace(), dataset.getName(), partition.toString());
       }
+      iDSWCLUpdatedPartitions.add(partition.toString());
 
       writer.initialize();
 
@@ -294,7 +321,7 @@ abstract class PartitionedDatasetWriter<E, W extends FileSystemWriter<E>> extend
 
     @Override
     protected CacheLoader<StorageKey, FileSystemWriter<E>> createCacheLoader() {
-      return new DatasetWriterCacheLoader<E>(view);
+      return new DatasetWriterCacheLoader<E>(view, pDSWUpdatedPartitions);
     }
   }
 
@@ -309,7 +336,7 @@ abstract class PartitionedDatasetWriter<E, W extends FileSystemWriter<E>> extend
     @Override
     protected CacheLoader<StorageKey, FileSystemWriter.IncrementalWriter<E>>
         createCacheLoader() {
-      return new IncrementalDatasetWriterCacheLoader<E>(view);
+      return new IncrementalDatasetWriterCacheLoader<E>(view, pDSWUpdatedPartitions);
     }
 
     @Override
