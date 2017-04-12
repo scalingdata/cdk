@@ -79,14 +79,19 @@ public class TestPartitionUpdateReporter {
           updatedPartitions.add(partition);
         }
       });
+    } else {
+      Assert.fail("DatasetWriter doesn't implement PartitionUpdateReport");
     }
+
     try {
+      writer.write(record);
+      record = new GenericRecordBuilder(record).set("username", "test2").build();
       writer.write(record);
     } finally {
       Closeables.close(writer, true);
     }
 
-    Assert.assertEquals("Unexpected number of updated partitions", 1, updatedPartitions.size());
+    Assert.assertEquals("Unexpected number of updated partitions", 2, updatedPartitions.size());
     Assert.assertTrue(updatedPartitions.contains("username_hash=1"));
   }
 }
