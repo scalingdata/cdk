@@ -92,6 +92,7 @@ public class TestPartitionUpdateReporter {
     }
 
     Assert.assertEquals("Unexpected number of updated partitions", 2, updatedPartitions.size());
-    Assert.assertTrue(updatedPartitions.contains("username_hash=1"));
+    Assert.assertTrue("Missing partition 'username_hash=1'", updatedPartitions.contains("username_hash=1"));
+    Assert.assertTrue("Missing partition 'username_hash=0'", updatedPartitions.contains("username_hash=0"));
   }
 }
